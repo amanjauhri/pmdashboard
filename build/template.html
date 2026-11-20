@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Northstar Notes</title>
+<title>PM Dashboard</title>
 <style>
 :root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
 *{box-sizing:border-box}
@@ -105,7 +105,7 @@ dl.ans dd{margin:0}
 <body>
 <div id="app">
   <div class="lock"><form id="lockform">
-    <h1 style="font-size:22px;margin:0">Northstar Notes</h1>
+    <h1 style="font-size:22px;margin:0">PM Dashboard</h1>
     <p class="sub">Enter your password to open today's notes.</p>
     <input type="password" id="pw" autocomplete="current-password" placeholder="Password" autofocus>
     <label><input type="checkbox" id="remember" checked> Remember on this device</label>
@@ -128,14 +128,14 @@ async function unwrap(pw) {
   return crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(PAYLOAD.wiv)}, kek, b64(PAYLOAD.wk));
 }
 (async () => {
-  try { const saved = localStorage.getItem('nsn_k'); if (saved) { render(await openWithKey(b64(saved))); return; } } catch (e) { try { localStorage.removeItem('nsn_k'); } catch (_) {} }
+  try { const saved = localStorage.getItem('pmd_k'); if (saved) { render(await openWithKey(b64(saved))); return; } } catch (e) { try { localStorage.removeItem('pmd_k'); } catch (_) {} }
   document.getElementById('lockform').addEventListener('submit', async (ev) => {
     ev.preventDefault();
     const err = document.getElementById('err'); err.textContent = 'Opening…';
     try {
       const raw = await unwrap(document.getElementById('pw').value);
       const data = await openWithKey(raw);
-      if (document.getElementById('remember').checked) { try { localStorage.setItem('nsn_k', ub64(raw)); } catch (_) {} }
+      if (document.getElementById('remember').checked) { try { localStorage.setItem('pmd_k', ub64(raw)); } catch (_) {} }
       render(data);
     } catch (e) { err.textContent = 'Wrong password.'; }
   });
@@ -247,7 +247,7 @@ function render(D) {
   <p class="foot">Refreshed ${esc(D.generated_label)} · <a href="#" id="forget" style="color:inherit">Forget this device</a></p>
   </div>`;
   const hs = document.getElementById('hs'); if (hs) hs.addEventListener('change', () => { document.getElementById('hb').innerHTML = holdingsRows(h, hs.value); });
-  document.getElementById('forget').addEventListener('click', (e) => { e.preventDefault(); try { localStorage.removeItem('nsn_k'); } catch (_) {} location.reload(); });
+  document.getElementById('forget').addEventListener('click', (e) => { e.preventDefault(); try { localStorage.removeItem('pmd_k'); } catch (_) {} location.reload(); });
 }
 </script>
 </body>
