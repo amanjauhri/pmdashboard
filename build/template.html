@@ -56,7 +56,7 @@ svg text{fill:var(--muted);font-size:11px}
 table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
 th{text-align:left;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
 td{padding:6px 8px;border-bottom:1px solid var(--line)}
-.r{text-align:right}
+.r{text-align:right;white-space:nowrap}
 details.d{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--panel)}
 details.d>summary{cursor:pointer;font-weight:600;list-style:none;display:flex;gap:8px}
 details.d>summary:before{content:"▸";color:var(--acc)}
@@ -97,6 +97,8 @@ dl.ans dd{margin:0}
 .lock button{padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,#6366f1,#ec4899);color:#fff;font:inherit;font-weight:600;cursor:pointer}
 .lock label{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
 .err{color:var(--down);font-size:12px;margin:0;min-height:1em}
+.sm{display:none;font-size:11px;color:var(--muted);font-weight:400}
+@media (max-width:640px){.hm{display:none}.sm{display:block}.wrap{padding:16px 12px 48px;gap:22px}.hero{padding:18px}.card{padding:14px}td,th{padding:6px 5px}.sec-h .sub{margin-left:0;width:100%}dl.ans{grid-template-columns:1fr;gap:2px 0}dl.ans dd{margin-bottom:8px}.bar{grid-template-columns:minmax(70px,34%) 1fr auto}}
 .foot{text-align:center;font-size:11px;color:var(--muted)}
 </style>
 </head>
@@ -184,7 +186,7 @@ const ALLOC = {'Individual stocks': '#6366f1', 'Active mutual funds': '#ec4899',
 
 function holdingsRows(h, mode) {
   const key = {'pnl-desc': (r) => -r.pnl, 'pnl-asc': (r) => r.pnl, 'ret-desc': (r) => -ret(r), 'ret-asc': (r) => ret(r), 'day-desc': (r) => -r.day_change_percentage, 'value-desc': (r) => -r.quantity * r.last_price}[mode];
-  return h.slice().sort((a, b) => key(a) - key(b)).map((r) => { const c = r.pnl >= 0 ? 'up' : 'down', dc = r.day_change_percentage >= 0 ? 'up' : 'down'; return `<tr><td>${esc(r.tradingsymbol)}</td><td class="r">${r.quantity}</td><td class="r">₹${r.average_price.toFixed(2)}</td><td class="r">₹${r.last_price.toLocaleString('en-IN')}</td><td class="r ${c}">${SGN(r.pnl)}</td><td class="r ${c}">${PCT(ret(r))}</td><td class="r ${dc}">${PCT(r.day_change_percentage / 100)}</td></tr>`; }).join('');
+  return h.slice().sort((a, b) => key(a) - key(b)).map((r) => { const c = r.pnl >= 0 ? 'up' : 'down', dc = r.day_change_percentage >= 0 ? 'up' : 'down'; return `<tr><td><b>${esc(r.tradingsymbol)}</b><span class="sm">${r.quantity} @ ₹${r.average_price.toFixed(0)} → ₹${Math.round(r.last_price).toLocaleString('en-IN')}</span></td><td class="r hm">${r.quantity}</td><td class="r hm">₹${r.average_price.toFixed(2)}</td><td class="r hm">₹${r.last_price.toLocaleString('en-IN')}</td><td class="r ${c}">${SGN(r.pnl)}</td><td class="r ${c}">${PCT(ret(r))}</td><td class="r ${dc}">${PCT(r.day_change_percentage / 100)}</td></tr>`; }).join('');
 }
 
 function render(D) {
@@ -222,7 +224,7 @@ function render(D) {
   ${h.length ? `<div class="grid"><div class="card"><h3>🟢 Biggest winners</h3>${movers(winners, ret, (r) => SGN(r.pnl))}</div><div class="card"><h3>🔴 Biggest losers</h3>${movers(losers, ret, (r) => SGN(r.pnl))}</div><div class="card"><h3>⚡ Last session's movers</h3>${movers(sess, (r) => r.day_change_percentage / 100, (r) => '₹' + r.last_price.toLocaleString('en-IN'))}</div></div>` : ''}
   <div class="grid">${(P.mf || []).length ? `<div class="card"><h3>Mutual funds</h3><div class="tw"><table><thead><tr><th>Fund</th><th class="r">Value</th><th class="r">Return</th></tr></thead><tbody>${P.mf.map((m) => `<tr><td>${esc(m.fund)}</td><td class="r">${INR(m.value)}</td><td class="r">${chip(m.pnl_pct)}</td></tr>`).join('')}</tbody></table></div></div>` : ''}
   ${(P.health || []).length ? `<div class="card tint"><h3>Portfolio health check</h3>${insights(P.health)}<p class="note" style="font-size:11px">These are facts about your portfolio, not buy or sell advice.</p></div>` : ''}</div>
-  ${h.length ? `<details class="d" open><summary>All stock holdings</summary><div class="row" style="margin-bottom:10px"><span class="sub">Sort by</span><select id="hs"><option value="pnl-desc">Highest P&amp;L first</option><option value="pnl-asc">Lowest P&amp;L first</option><option value="ret-desc">Highest return % first</option><option value="ret-asc">Lowest return % first</option><option value="day-desc">Best day first</option><option value="value-desc">Largest position first</option></select></div><div class="tw"><table><thead><tr><th>Stock</th><th class="r">Qty</th><th class="r">Avg</th><th class="r">Price</th><th class="r">P&amp;L</th><th class="r">Return</th><th class="r">Day</th></tr></thead><tbody id="hb">${holdingsRows(h, 'pnl-desc')}</tbody></table></div></details>` : ''}</section>
+  ${h.length ? `<details class="d" id="all-h" open><summary>All stock holdings</summary><div class="row" style="margin-bottom:10px"><span class="sub">Sort by</span><select id="hs"><option value="pnl-desc">Highest P&amp;L first</option><option value="pnl-asc">Lowest P&amp;L first</option><option value="ret-desc">Highest return % first</option><option value="ret-asc">Lowest return % first</option><option value="day-desc">Best day first</option><option value="value-desc">Largest position first</option></select></div><div class="tw"><table><thead><tr><th>Stock</th><th class="r hm">Qty</th><th class="r hm">Avg</th><th class="r hm">Price</th><th class="r">P&amp;L</th><th class="r">Return</th><th class="r">Day</th></tr></thead><tbody id="hb">${holdingsRows(h, 'pnl-desc')}</tbody></table></div></details>` : ''}</section>
 
   <section class="sec" id="case" style="--acc:var(--case)"><div class="sec-h"><div class="ico">🧩</div><h2>PM case of the day</h2><p class="sub">Brief for ${esc(B.date ? fdate(B.date, {day: 'numeric', month: 'short', year: 'numeric'}) : '—')}</p></div>${stale}
   <div class="card tint"><div class="row"><span class="pill">${esc(B.case_type)}</span><span class="pill">${esc(B.case_company)}</span><span class="pill">${esc(B.case_difficulty)}</span></div><p class="prompt">${esc(B.case_prompt)}</p><p class="note">⏱ Take 10 minutes to answer out loud, then open the approach.</p></div>
