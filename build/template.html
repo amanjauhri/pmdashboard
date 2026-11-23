@@ -98,7 +98,26 @@ dl.ans dd{margin:0}
 .lock label{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
 .err{color:var(--down);font-size:12px;margin:0;min-height:1em}
 .sm{display:none;font-size:11px;color:var(--muted);font-weight:400}
-@media (max-width:640px){.hm{display:none}.sm{display:block}.wrap{padding:16px 12px 48px;gap:22px}.hero{padding:18px}.card{padding:14px}td,th{padding:6px 5px}.sec-h .sub{margin-left:0;width:100%}dl.ans{grid-template-columns:1fr;gap:2px 0}dl.ans dd{margin-bottom:8px}.bar{grid-template-columns:minmax(70px,34%) 1fr auto}}
+@media (max-width:640px){.hm{display:none}.sm{display:block}.wrap{padding:16px 12px 48px;gap:22px}.hero{padding:18px}.card{padding:14px}td,th{padding:6px 5px}.sec-h .sub{margin-left:0;width:100%}dl.ans{grid-template-columns:1fr;gap:2px 0}.days li{grid-template-columns:70px 64px 1fr}dl.ans dd{margin-bottom:8px}.bar{grid-template-columns:minmax(70px,34%) 1fr auto}}
+.days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.days li{display:grid;grid-template-columns:88px 78px 1fr;gap:8px;align-items:baseline;font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.03)}
+.days li.hi{background:rgba(244,63,94,.10)}
+.days .a{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.days .t{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.catm{grid-column:1/-1;font-size:11px;color:var(--muted);margin:-4px 0 2px}
+.cc{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:rgba(255,255,255,.04)}
+.cc .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.cc .nm{font-weight:700}
+.cc .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;font-size:12px}
+.cc .stats b{display:block;font-size:14px;font-variant-numeric:tabular-nums}
+.cc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:12px}
+.cc ul li{display:flex;justify-content:space-between;gap:8px}
+.cc ul li span:first-child{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.term{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:12px;background:linear-gradient(150deg,color-mix(in srgb,var(--acc) 22%,var(--panel)),var(--panel));border:1px solid color-mix(in srgb,var(--acc) 40%,var(--line))}
+.term .w{font-family:var(--serif);font-size:22px}
+.term p{margin:0;font-size:13px}
+.script p{margin:0 0 10px;font-size:14px;line-height:1.55}
+.script b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);margin-bottom:2px}
 .foot{text-align:center;font-size:11px;color:var(--muted)}
 </style>
 </head>
@@ -164,9 +183,24 @@ function dayChart(days, avg, today) {
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Spend per day">`;
   for (let i = 0; i <= 4; i++) { const v = nice * i / 4; s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="#262b38"/><text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end">${INRk(v)}</text>`; }
   days.forEach((d, i) => { const h = Math.max(d.amount > 0 ? 2 : 0, y(0) - y(d.amount)); const col = d.day > today ? '#3a3f4d' : (avg && d.amount > avg * 1.5 ? 'var(--down)' : 'var(--fin)'); s += `<rect x="${m.l + i * bw + bw * .15}" width="${bw * .7}" y="${y(0) - h}" height="${h}" rx="2" fill="${col}"><title>${fdate(d.day, {weekday: 'short', day: 'numeric', month: 'short'})} · ${INR(d.amount)}</title></rect>`; });
-  if (avg) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(avg)}" y2="${y(avg)}" stroke="#9aa1b2" stroke-dasharray="3 3"/>`;
+  if (avg) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(avg)}" y2="${y(avg)}" stroke="#9aa1b2" stroke-dasharray="3 3"/><text x="${W - m.r}" y="${y(avg) - 4}" text-anchor="end">avg ${INR(avg)}</text>`;
+  days.map((d, i) => [d, i]).filter(([d]) => d.amount > 0).sort((a, b) => b[0].amount - a[0].amount).slice(0, 3).forEach(([d, i]) => { s += `<text x="${m.l + (i + .5) * bw}" y="${y(d.amount) - 3}" text-anchor="middle" style="fill:var(--fg);font-size:10px">${INRk(d.amount)}</text>`; });
   [1, 8, 15, 22, 29].filter((n) => n <= days.length).forEach((n) => { s += `<text x="${m.l + (n - .5) * bw}" y="${H - 4}" text-anchor="middle">${n}</text>`; });
   return s + '</svg>';
+}
+function dayList(days, avg, today) {
+  const done = (days || []).filter((d) => d.day <= today).reverse();
+  const row = (d) => `<li class="${avg && d.amount > avg * 1.5 ? 'hi' : ''}"><span>${esc(fdate(d.day, {weekday: 'short', day: 'numeric', month: 'short'}))}</span><span class="a">${INR(d.amount)}</span><span class="t">${d.amount ? esc((d.items || []).map((x) => x.merchant + ' ' + INR(x.amount)).join(' · ') + (d.n > (d.items || []).length ? ` +${d.n - d.items.length} more` : '')) : 'No spend'}</span></li>`;
+  return `<ul class="days">${done.slice(0, 7).map(row).join('')}</ul>${done.length > 7 ? `<details class="d" style="padding:8px 12px"><summary style="font-size:12px">Earlier days this month</summary><ul class="days">${done.slice(7).map(row).join('')}</ul></details>` : ''}`;
+}
+function cardsHtml(cards, today) {
+  if (!cards || !cards.length) return '';
+  return `<div class="card"><div class="row" style="justify-content:space-between"><h3>💳 Credit cards</h3><span class="sub">From Fold · bill payments made by UPI may not show as paid</span></div><div class="grid">${cards.map((c) => {
+    const util = c.limit ? c.outstanding / c.limit : 0, stale = c.stale_days != null && c.stale_days > 3;
+    const billLine = c.last_bill > 0 ? `<p class="note">Last bill ${INR(c.last_bill)}${c.last_due ? ' · due ' + esc(fdate(c.last_due)) : ''}${c.last_paid_recorded ? ' · paid ' + INR(c.last_paid_recorded) : ' · no payment recorded in Fold yet'}</p>` : '';
+    return `<div class="cc"><div class="top"><span class="nm">${esc(c.name)} ••${esc(c.last4)}</span><span class="sub">${stale ? '⚠️ last synced ' + esc(fdate(c.synced, {day: 'numeric', month: 'short', year: 'numeric'})) : 'synced ' + esc(fdate(c.synced))}</span></div>
+    <div class="stats"><span>Spent this cycle<b>${INR(c.spent_cycle)}</b></span><span>Outstanding<b>${INR(c.outstanding)}</b></span><span>Next statement<b>${c.statement_date ? esc(fdate(c.statement_date)) : '—'}</b></span><span>Limit used<b class="${util > .3 ? 'down' : ''}">${Math.round(util * 100)}% of ${INRk(c.limit)}</b></span></div>${billLine}
+    ${c.txns && c.txns.length ? `<ul>${c.txns.map((t) => `<li><span>${esc(fdate(t.day))} · ${esc(t.merchant)}</span><b>${INR(t.amount)}</b></li>`).join('')}</ul>${c.n_txns > c.txns.length ? `<p class="note">+${c.n_txns - c.txns.length} more this cycle</p>` : ''}` : `<p class="note">${stale ? 'Fold hasn\'t synced this card recently, so recent spends may be missing. Re-link it in Fold.' : 'No spends this cycle.'}</p>`}</div>`; }).join('')}</div></div>`;
 }
 function lineChart(rows) {
   if (!rows || rows.length < 2) return `<p class="note">${rows && rows.length ? `Tracking started ${fdate(rows[0].date)} at ${INR(rows[0].value)}. The line appears after the next morning's snapshot.` : 'No snapshots yet.'}</p>`;
@@ -211,9 +245,10 @@ function render(D) {
 
   <section class="sec" id="money" style="--acc:var(--fin)"><div class="sec-h"><div class="ico">💸</div><h2>Daily spend</h2><p class="sub">${esc(F.month_label || '')} · card bills and investments left out</p></div>
   ${F.ok === false ? '<p class="warn">Fold data was unavailable at refresh time.</p>' : ''}
-  <div class="grid"><div class="card tint"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><p class="kl">Average per day</p><p class="kv">${INR(F.avg_per_day)}</p></div><div style="text-align:right"><p class="kl">vs last month</p><p style="margin:2px 0 0">${chip(F.change, true)}</p></div></div>${dayChart(F.daily, F.avg_per_day, D.today)}</div>
-  <div class="card"><h3>Top categories</h3><div class="bars">${(F.cats || []).slice(0, 5).map((c) => `<div class="bar"><span>${esc(c.category)}</span><div class="track"><div class="fill" style="width:${Math.max(3, c.amount / cmax * 100)}%"></div></div><b>${INRk(c.amount)}</b></div>`).join('') || '<p class="note">No tagged spending yet.</p>'}</div></div>
-  <div class="card"><h3>What's good, what to watch</h3>${insights(F.insights)}</div></div></section>
+  <div class="card tint"><div class="grid" style="align-items:start"><div style="display:flex;flex-direction:column;gap:10px"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><p class="kl">Average per day</p><p class="kv">${INR(F.avg_per_day)}</p><p class="kn">Total so far ${INR(F.total)}</p></div><div style="text-align:right"><p class="kl">vs last month</p><p style="margin:2px 0 0">${chip(F.change, true)}</p></div></div>${dayChart(F.daily, F.avg_per_day, D.today)}<p class="note">Red bars are days above 1.5× your average. Top 3 days are labelled.</p></div><div><p class="kl" style="margin-bottom:6px">Day by day, newest first</p>${dayList(F.daily, F.avg_per_day, D.today)}</div></div></div>
+  <div class="grid">
+  <div class="card"><h3>Top categories</h3><div class="bars">${(F.cats || []).slice(0, 6).map((c) => `<div class="bar"><span>${esc(c.category)}</span><div class="track"><div class="fill" style="width:${Math.max(3, c.amount / cmax * 100)}%"></div></div><b>${INR(c.amount)}</b>${(c.merchants || []).length ? `<div class="catm">${esc(c.merchants.map((m) => m.name + ' ' + INR(m.amount)).join(' · '))}</div>` : ''}</div>`).join('') || '<p class="note">No tagged spending yet.</p>'}</div></div>
+  <div class="card"><h3>What's good, what to watch</h3>${insights(F.insights)}</div></div>${cardsHtml(F.cards, D.today)}</section>
 
   <section class="sec" id="markets" style="--acc:var(--mkt)"><div class="sec-h"><div class="ico">📈</div><h2>Portfolio</h2><p class="sub">Zerodha Kite · stocks and Coin mutual funds</p></div>${pfWarn}
   <div class="kpis"><div class="kpi"><p class="kl">Total value</p><p class="kv">${INR(P.value)}</p><p class="kn">Invested ${INR(P.invested)}</p></div>
@@ -222,14 +257,15 @@ function render(D) {
   <div class="card"><div class="row" style="justify-content:space-between"><h3>Portfolio value over time</h3><span class="sub">Solid: value · dashed: invested</span></div>${lineChart(P.history)}</div>
   ${alloc.length ? `<div class="card"><div class="row" style="justify-content:space-between"><h3>Where your money sits</h3><span class="sub">${h.length} stocks · ${(P.mf || []).length} funds</span></div><div class="split">${alloc.filter((a) => a.share > 0).map((a) => `<span style="width:${a.share * 100}%;background:${ALLOC[a.bucket]}"></span>`).join('')}</div><div class="legend">${alloc.map((a) => `<span><i style="background:${ALLOC[a.bucket]}"></i>${esc(a.bucket)} · ${INRk(a.value)} · ${Math.round(a.share * 100)}%</span>`).join('')}</div></div>` : ''}
   ${h.length ? `<div class="grid"><div class="card"><h3>🟢 Biggest winners</h3>${movers(winners, ret, (r) => SGN(r.pnl))}</div><div class="card"><h3>🔴 Biggest losers</h3>${movers(losers, ret, (r) => SGN(r.pnl))}</div><div class="card"><h3>⚡ Last session's movers</h3>${movers(sess, (r) => r.day_change_percentage / 100, (r) => '₹' + r.last_price.toLocaleString('en-IN'))}</div></div>` : ''}
-  <div class="grid">${(P.mf || []).length ? `<div class="card"><h3>Mutual funds</h3><div class="tw"><table><thead><tr><th>Fund</th><th class="r">Value</th><th class="r">Return</th></tr></thead><tbody>${P.mf.map((m) => `<tr><td>${esc(m.fund)}</td><td class="r">${INR(m.value)}</td><td class="r">${chip(m.pnl_pct)}</td></tr>`).join('')}</tbody></table></div></div>` : ''}
-  ${(P.health || []).length ? `<div class="card tint"><h3>Portfolio health check</h3>${insights(P.health)}<p class="note" style="font-size:11px">These are facts about your portfolio, not buy or sell advice.</p></div>` : ''}</div>
+  <div class="grid">${(P.mf || []).length ? `<div class="card"><div class="row" style="justify-content:space-between"><h3>Mutual funds</h3><span class="sub">${P.mf.length} funds on Coin</span></div><div class="tw"><table><thead><tr><th>Fund</th><th class="r hm">Units</th><th class="r hm">Avg NAV</th><th class="r hm">NAV</th><th class="r">Invested</th><th class="r">Value</th><th class="r">P&amp;L</th></tr></thead><tbody>${P.mf.map((m) => { const c = m.pnl >= 0 ? 'up' : 'down'; return `<tr><td><b>${esc(m.fund)}</b>${m.units != null ? `<span class="sm">${m.units.toLocaleString('en-IN', {maximumFractionDigits: 1})} units · ₹${m.avg_nav.toFixed(2)} → ₹${m.nav.toFixed(2)}</span>` : ''}</td><td class="r hm">${m.units != null ? m.units.toLocaleString('en-IN', {maximumFractionDigits: 1}) : '—'}</td><td class="r hm">${m.avg_nav != null ? '₹' + m.avg_nav.toFixed(2) : '—'}</td><td class="r hm">${m.nav != null ? '₹' + m.nav.toFixed(2) : '—'}</td><td class="r">${INR(m.invested)}</td><td class="r">${INR(m.value)}</td><td class="r ${c}">${SGN(m.pnl)}<br>${PCT(m.pnl_pct)}</td></tr>`; }).join('')}<tr><td><b>Total</b></td><td class="hm"></td><td class="hm"></td><td class="hm"></td><td class="r"><b>${INR(P.mf.reduce((a, m) => a + m.invested, 0))}</b></td><td class="r"><b>${INR(P.mf.reduce((a, m) => a + m.value, 0))}</b></td><td class="r"><b>${SGN(P.mf.reduce((a, m) => a + (m.value - m.invested), 0))}</b></td></tr></tbody></table></div></div>` : ''}
+  ${(P.health || []).length ? `<div class="card tint"><h3>Portfolio health check</h3>${insights(P.health)}<details class="d" style="padding:8px 12px"><summary style="font-size:13px">How people usually think about a mix</summary><ul class="ins"><li class="info"><span>🧱</span><span><b>Emergency fund first.</b> 6 months of expenses in a savings account or liquid fund before investing more in equity.</span></li><li class="info"><span>⚖️</span><span><b>Equity vs safer assets by time horizon.</b> Money needed within 3 years usually sits in debt or FDs; long-term money can take equity swings. Some use "100 minus age" in equity as a rough starting point.</span></li><li class="info"><span>🎯</span><span><b>Core and satellite.</b> A large core (often 60–80% of equity) in broad, low-cost index funds, with a smaller satellite in active funds, small caps or individual stocks.</span></li><li class="info"><span>🪙</span><span><b>Gold as a hedge.</b> Commonly 5–10% of a portfolio.</span></li><li class="info"><span>🔁</span><span><b>Rebalance once a year</b> back to your chosen mix rather than reacting to daily moves.</span></li></ul><p class="note" style="font-size:11px">General frameworks, not advice for you. For a mix built around your goals, taxes and risk, speak to a SEBI-registered investment adviser.</p></details><p class="note" style="font-size:11px">The checks above are facts about your portfolio, not buy or sell advice.</p></div>` : ''}</div>
   ${h.length ? `<details class="d" id="all-h" open><summary>All stock holdings</summary><div class="row" style="margin-bottom:10px"><span class="sub">Sort by</span><select id="hs"><option value="pnl-desc">Highest P&amp;L first</option><option value="pnl-asc">Lowest P&amp;L first</option><option value="ret-desc">Highest return % first</option><option value="ret-asc">Lowest return % first</option><option value="day-desc">Best day first</option><option value="value-desc">Largest position first</option></select></div><div class="tw"><table><thead><tr><th>Stock</th><th class="r hm">Qty</th><th class="r hm">Avg</th><th class="r hm">Price</th><th class="r">P&amp;L</th><th class="r">Return</th><th class="r">Day</th></tr></thead><tbody id="hb">${holdingsRows(h, 'pnl-desc')}</tbody></table></div></details>` : ''}</section>
 
   <section class="sec" id="case" style="--acc:var(--case)"><div class="sec-h"><div class="ico">🧩</div><h2>PM case of the day</h2><p class="sub">Brief for ${esc(B.date ? fdate(B.date, {day: 'numeric', month: 'short', year: 'numeric'}) : '—')}</p></div>${stale}
   <div class="card tint"><div class="row"><span class="pill">${esc(B.case_type)}</span><span class="pill">${esc(B.case_company)}</span><span class="pill">${esc(B.case_difficulty)}</span></div><p class="prompt">${esc(B.case_prompt)}</p><p class="note">⏱ Take 10 minutes to answer out loud, then open the approach.</p></div>
   <details class="d"><summary>How to approach it</summary>${steps(B.case_approach)}</details>
-  <details class="d"><summary>Sample answer</summary>${ans(B.case_solution)}</details>
+  <details class="d"><summary>Sample answer (summary)</summary>${ans(B.case_solution)}</details>
+  ${B.case_full_answer ? `<details class="d"><summary>Full answer, the way you'd say it</summary><div class="script">${lines(B.case_full_answer).map((l) => { const [t, ...r] = l.split('|'); return r.length ? `<p><b>${esc(t)}</b>${esc(r.join('|'))}</p>` : `<p>${esc(t)}</p>`; }).join('')}</div></details>` : ''}
   <details class="d"><summary>Follow-ups interviewers ask</summary>${qa(B.case_followups)}</details>
   <p class="callout">💡 <b>Interview tip:</b> ${esc(B.case_tip)}</p></section>
 
@@ -243,7 +279,10 @@ function render(D) {
   <div class="card tint"><div class="row"><span class="pill">${esc(B.lab_track)}</span></div><p class="prompt">${esc(B.lab_title)}</p>
   <div class="mini"><div class="h">📍 What's happening</div><p>${esc(B.lab_news)}</p><p class="note">${/^https:[/][/]/.test(String(B.lab_url || '')) ? `<a style="color:inherit" href="${esc(B.lab_url)}" target="_blank" rel="noopener">Source: ${esc(B.lab_source)} ↗</a>` : 'Source: ' + esc(B.lab_source)}</p></div>
   ${steps(B.lab_steps)}
-  <div class="grid"><div class="mini"><div class="h">🧭 Your edge</div><p>${esc(B.lab_edge)}</p></div><div style="display:flex;flex-direction:column;gap:10px"><div class="mini"><div class="h">🎤 Interview question</div><p>${esc(B.lab_interview)}</p></div><div class="mini"><div class="h">📊 Metrics to name</div><p>${esc(B.lab_metrics)}</p></div></div></div></div></section>
+  </div>
+  ${B.lab_term ? (() => { const [w, mean, ex] = String(B.lab_term).split('|'); return `<div class="term"><div class="h" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)">📘 Term of the day</div><div class="w">${esc(w)}</div><p>${esc(mean)}</p>${ex ? `<p class="note"><b>Example:</b> ${esc(ex)}</p>` : ''}</div>`; })() : ''}
+  <div class="card"><h3>🎤 Interview question</h3><p class="prompt" style="font-size:17px">${esc(B.lab_interview)}</p>${B.lab_answer ? `<details class="d"><summary>Short model answer</summary><p style="margin:0">${esc(B.lab_answer)}</p></details>` : ''}</div>
+  ${B.lab_metrics ? `<div class="card"><h3>📊 Metrics to know, explained</h3>${lines(B.lab_metrics).some((l) => l.includes('|')) ? ans(B.lab_metrics) : `<p>${esc(B.lab_metrics)}</p>`}</div>` : ''}</section>
   <p class="foot">Refreshed ${esc(D.generated_label)} · <a href="#" id="forget" style="color:inherit">Forget this device</a></p>
   </div>`;
   const hs = document.getElementById('hs'); if (hs) hs.addEventListener('change', () => { document.getElementById('hb').innerHTML = holdingsRows(h, hs.value); });

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the password-locked Northstar Notes page.
+"""Build the password-locked PM Dashboard page.
 
 Usage:
   build.py init --password PW          -> writes build/keywrap.json, prints the content key (hex). Run once.
@@ -9,6 +9,7 @@ Usage:
   fold_cur.json, fold_prev.json   list_transactions answers ({"transactions":[...]}) for this and last month
   kite_holdings.json              Kite portfolio mode=holdings type=full answer ({"data":[...]})
   kite_summary.json               Kite portfolio mode=holdings type=summary answer
+  fold_cards.json                 Fold list_credit_cards answer ({"credit_cards":[...]})
   kite_mf.json                    Kite mutual_funds mode=holdings answer (list)
   history.json                    list of snapshots {date, stocks_value, stocks_invested, mf_value, mf_invested}
   brief.json, news.json           the dashboard's daily_brief / ai_news files ({"rows":[...]})
@@ -49,14 +50,60 @@ def ist_day(iso):
     return t.date().isoformat()
 
 
-def cat_totals(rows):
-    out = {}
-    for t in rows:
+CARD_BILL = re.compile(r"BILLPAY|CC BILL|CREDIT ?CARD|CRED CLUB|CHEQ", re.I)
+
+
+def cat_of(t):
+    c = (t.get("category") or {}).get("name") or "Untagged"
+    if c == "Bill" and CARD_BILL.search(t.get("narration") or ""):
+        return "Credit Bill"
+    return c
+
+
+def amt(t):
+    return float(t.get("effective_amount") or t.get("amount") or 0)
+
+
+def spends(rows):
+    for t in rows or []:
         if (t.get("type") or "DEBIT").upper() != "DEBIT" or t.get("excluded_from_cash_flow"):
             continue
-        c = (t.get("category") or {}).get("name") or "Untagged"
-        out[c] = out.get(c, 0) + float(t.get("effective_amount") or t.get("amount") or 0)
+        if cat_of(t) in EXCL:
+            continue
+        yield t
+
+
+def merchant(t):
+    m = t.get("merchant_name")
+    if m:
+        return m.strip().title() if (m.isupper() or m.islower()) else m.strip()
+    n = (t.get("narration") or "").split("/")
+    return (n[1].strip().title() if len(n) > 1 and n[1].strip() else "Other")
+
+
+def cat_totals(rows):
+    out = {}
+    for t in rows or []:
+        if (t.get("type") or "DEBIT").upper() != "DEBIT" or t.get("excluded_from_cash_flow"):
+            continue
+        c = cat_of(t)
+        out[c] = out.get(c, 0) + amt(t)
     return out
+
+
+def top_merchants(rows, cat, n=3):
+    m = {}
+    for t in spends(rows):
+        if cat_of(t) == cat:
+            k = merchant(t)
+            a = m.setdefault(k, [0.0, 0])
+            a[0] += amt(t); a[1] += 1
+    return [{"name": k, "amount": v[0], "count": v[1]} for k, v in sorted(m.items(), key=lambda kv: -kv[1][0])[:n]]
+
+
+def why(rows, cat):
+    ms = top_merchants(rows, cat)
+    return ", ".join(f"{m['name']} ₹{round(m['amount']):,}" + (f" ({m['count']}x)" if m["count"] > 1 else "") for m in ms)
 
 
 def fin_block(cur, prev, today):
@@ -67,21 +114,27 @@ def fin_block(cur, prev, today):
     py, pm = (y - 1, 12) if m == 1 else (y, m - 1)
     prev_days = calendar.monthrange(py, pm)[1]
     days = today.day
+    oneoff = None
+    if prev:
+        ps = list(spends(prev)); ptot = sum(amt(t) for t in ps)
+        big = max(ps, key=amt, default=None)
+        if big is not None and ptot and amt(big) > 0.3 * ptot:
+            oneoff = big
+            prev = [t for t in prev if t is not big]
     ct = {k: v for k, v in cat_totals(cur).items() if k not in EXCL}
     pt = {k: v for k, v in cat_totals(prev or []).items() if k not in EXCL}
     spent, pspent = sum(ct.values()), sum(pt.values())
     avg, pavg = spent / days, (pspent / prev_days if prev else None)
     change = (avg - pavg) / pavg if pavg else None
     daily = {f"{y}-{m:02d}-{d:02d}": 0.0 for d in range(1, days_in + 1)}
-    for t in cur:
-        if (t.get("type") or "DEBIT").upper() != "DEBIT" or t.get("excluded_from_cash_flow"):
-            continue
-        c = (t.get("category") or {}).get("name") or "Untagged"
-        if c in EXCL:
-            continue
+    items = {}
+    for t in spends(cur):
         d = ist_day(t["date"])
         if d in daily:
-            daily[d] += float(t.get("effective_amount") or t.get("amount") or 0)
+            daily[d] += amt(t)
+            dm = items.setdefault(d, {})
+            k = merchant(t)
+            r = dm.setdefault(k, [0.0, k, cat_of(t), 0]); r[0] += amt(t); r[3] += 1
     fmt = lambda v: "₹" + f"{round(v):,}"
     ins = []
     if change is not None:
@@ -89,26 +142,61 @@ def fin_block(cur, prev, today):
             ins.append({"tone": "good", "text": f"You're spending {round(-change*100)}% less per day than last month ({fmt(avg)} vs {fmt(pavg)})."})
         else:
             ins.append({"tone": "bad", "text": f"You're spending {round(change*100)}% more per day than last month ({fmt(avg)} vs {fmt(pavg)})."})
+    if oneoff is not None:
+        ins.append({"tone": "info", "text": f"Last month's comparison leaves out one big payment of {fmt(amt(oneoff))} to {merchant(oneoff)} on {dt.date.fromisoformat(ist_day(oneoff['date'])).strftime('%d %b')} (tagged {cat_of(oneoff)}), so it doesn't distort the numbers."})
     deltas = [(c, v / days, pt.get(c, 0) / prev_days) for c, v in ct.items()] if prev else []
     ups = sorted([d for d in deltas if d[1] - d[2] > 50], key=lambda d: d[2] - d[1])
     if ups:
         c, n, w = ups[0]
-        ins.append({"tone": "bad", "text": f"{c} is up to {fmt(n)}/day from {fmt(w)}/day. That's the first place to trim."})
+        ins.append({"tone": "bad", "text": f"{c} is up to {fmt(n)}/day from {fmt(w)}/day. This month that's {why(cur, c)}."})
     downs = sorted([d for d in deltas if d[2] > 0 and d[1] - d[2] < -50], key=lambda d: d[1] - d[2])
     if downs:
         c, n, w = downs[0]
-        ins.append({"tone": "good", "text": f"{c} is down to {fmt(n)}/day from {fmt(w)}/day. Nice."})
+        lw = why(prev, c)
+        ins.append({"tone": "good", "text": f"{c} is down to {fmt(n)}/day from {fmt(w)}/day." + (f" Last month it was mostly {lw}." if lw else "")})
     food = ct.get("Food & Drinks", 0)
     if spent and food / spent > 0.25:
-        ins.append({"tone": "bad", "text": f"Eating out and delivery is {round(food/spent*100)}% of your spending. Try capping delivery orders at 2 a week."})
+        ins.append({"tone": "bad", "text": f"Food & Drinks is {round(food/spent*100)}% of your spending: {why(cur, 'Food & Drinks')}."})
+    big = max(spends(cur), key=amt, default=None)
+    if big is not None:
+        ins.append({"tone": "info", "text": f"Biggest single spend: {fmt(amt(big))} at {merchant(big)} ({cat_of(big)}) on {dt.date.fromisoformat(ist_day(big['date'])).strftime('%d %b')}."})
     return {
         "ok": True,
         "month_label": today.strftime("%B %Y") + " so far",
         "avg_per_day": avg, "change": change,
-        "cats": [{"category": k, "amount": v} for k, v in sorted(ct.items(), key=lambda kv: -kv[1])],
-        "daily": [{"day": k, "amount": v} for k, v in daily.items()],
-        "insights": ins[:4],
+        "total": spent,
+        "cats": [{"category": k, "amount": v, "merchants": top_merchants(cur, k)} for k, v in sorted(ct.items(), key=lambda kv: -kv[1])],
+        "daily": [{"day": k, "amount": v, "items": [{"amount": a, "merchant": mm + (f" ×{n}" if n > 1 else ""), "category": cc} for a, mm, cc, n in sorted(items.get(k, {}).values(), key=lambda r: -r[0])[:4]], "n": len(items.get(k, {}))} for k, v in daily.items()],
+        "insights": ins[:6],
     }
+
+
+def cards_block(cards, cur, today):
+    lst = cards.get("credit_cards") if isinstance(cards, dict) else cards
+    if not isinstance(lst, list):
+        return []
+    out = []
+    for c in lst:
+        if c.get("is_closed") or (c.get("relationship") or {}).get("role") == "CHILD":
+            continue
+        cc, pc = c.get("current_cycle") or {}, c.get("previous_cycle") or {}
+        start = (pc.get("statement_date") or "")[:10]
+        tx = [t for t in (cur or []) if t.get("account_id") == c["id"] and (t.get("type") or "DEBIT").upper() == "DEBIT" and ist_day(t["date"]) >= (start or "0")]
+        tx.sort(key=lambda t: t["date"], reverse=True)
+        synced = (c.get("last_synced_at") or "")[:10]
+        stale_days = (today - dt.date.fromisoformat(synced)).days if synced else None
+        lim = float(cc.get("credit_limit") or pc.get("credit_limit") or 0)
+        out.append({
+            "name": (lambda i, n: n if n.lower().startswith(i.lower()) else f"{i} {n}".strip())(c.get('issuer_name') or '', (c.get('card_name') or '').title()), "last4": c.get("card_last_four"),
+            "spent_cycle": float(cc.get("amount_spent_this_cycle") or 0), "statement_date": (cc.get("statement_date") or "")[:10],
+            "outstanding": float(c.get("outstanding") or 0), "limit": lim,
+            "last_bill": float(pc.get("total_amount_due") or 0), "last_due": (pc.get("payment_due_date") or "")[:10],
+            "last_paid_recorded": float(pc.get("amount_paid") or 0),
+            "synced": synced, "stale_days": stale_days,
+            "txns": [{"day": ist_day(t["date"]), "merchant": merchant(t), "category": cat_of(t), "amount": amt(t)} for t in tx[:6]],
+            "n_txns": len(tx),
+        })
+    return out
 
 
 def pf_block(hold, summ, mf, history, today_iso):
@@ -123,7 +211,8 @@ def pf_block(hold, summ, mf, history, today_iso):
         for m in (mfl or []):
             v, i = float(m["quantity"]) * float(m["last_price"]), float(m["quantity"]) * float(m["average_price"])
             name = re.sub(r" - DIRECT PLAN.*$", "", m["fund"]).title()
-            M.append({"fund": name, "value": v, "invested": i, "pnl_pct": (v - i) / i if i else 0})
+            M.append({"fund": name, "value": v, "invested": i, "pnl": v - i, "pnl_pct": (v - i) / i if i else 0,
+                      "units": float(m["quantity"]), "avg_nav": float(m["average_price"]), "nav": float(m["last_price"])})
         M.sort(key=lambda r: -r["value"])
         sv, si = float(summ["current_value"]), float(summ["invested_amount"])
         mv, mi = sum(r["value"] for r in M), sum(r["invested"] for r in M)
@@ -191,7 +280,10 @@ def cmd_build(a):
     now = dt.datetime.now(IST)
     today = dt.date.fromisoformat(a.today) if a.today else now.date()
     raw = a.raw
-    fin = fin_block(txns(load(raw, "fold_cur.json")), txns(load(raw, "fold_prev.json")), today)
+    cur_t = txns(load(raw, "fold_cur.json"))
+    fin = fin_block(cur_t, txns(load(raw, "fold_prev.json")), today)
+    if fin.get("ok"):
+        fin["cards"] = cards_block(load(raw, "fold_cards.json"), cur_t, today)
     pf = pf_block(load(raw, "kite_holdings.json"), load(raw, "kite_summary.json"), load(raw, "kite_mf.json"), load(raw, "history.json"), today.isoformat())
     snap = pf.pop("snapshot")
     brief = (rows_of(load(raw, "brief.json")) or [{}])[0]
@@ -210,7 +302,7 @@ def cmd_build(a):
     if snap and a.snapshot_out:
         with open(a.snapshot_out, "w") as f:
             json.dump(snap, f)
-    print(json.dumps({"fin_ok": fin.get("ok"), "pf_stale": pf["stale"], "holdings": len(pf["holdings"]), "brief_date": brief.get("date"), "news": len(data["news"]), "snapshot": snap}))
+    print(json.dumps({"fin_ok": fin.get("ok"), "cards": len(fin.get("cards") or []), "pf_stale": pf["stale"], "holdings": len(pf["holdings"]), "brief_date": brief.get("date"), "news": len(data["news"]), "snapshot": snap}))
 
 
 if __name__ == "__main__":
