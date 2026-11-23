@@ -195,11 +195,11 @@ function dayList(days, avg, today) {
 }
 function cardsHtml(cards, today) {
   if (!cards || !cards.length) return '';
-  return `<div class="card"><div class="row" style="justify-content:space-between"><h3>💳 Credit cards</h3><span class="sub">From Fold · bill payments made by UPI may not show as paid</span></div><div class="grid">${cards.map((c) => {
+  return `<div class="card"><div class="row" style="justify-content:space-between"><h3>💳 Credit cards</h3><span class="sub">From Fold · new spends can take 1–3 days to show in your bank's app</span></div><div class="grid">${cards.map((c) => {
     const util = c.limit ? c.outstanding / c.limit : 0, stale = c.stale_days != null && c.stale_days > 3;
     const billLine = c.last_bill > 0 ? `<p class="note">Last bill ${INR(c.last_bill)}${c.last_due ? ' · due ' + esc(fdate(c.last_due)) : ''}${c.last_paid_recorded ? ' · paid ' + INR(c.last_paid_recorded) : ' · no payment recorded in Fold yet'}</p>` : '';
     return `<div class="cc"><div class="top"><span class="nm">${esc(c.name)} ••${esc(c.last4)}</span><span class="sub">${stale ? '⚠️ last synced ' + esc(fdate(c.synced, {day: 'numeric', month: 'short', year: 'numeric'})) : 'synced ' + esc(fdate(c.synced))}</span></div>
-    <div class="stats"><span>Spent this cycle<b>${INR(c.spent_cycle)}</b></span><span>Outstanding<b>${INR(c.outstanding)}</b></span><span>Next statement<b>${c.statement_date ? esc(fdate(c.statement_date)) : '—'}</b></span><span>Limit used<b class="${util > .3 ? 'down' : ''}">${Math.round(util * 100)}% of ${INRk(c.limit)}</b></span></div>${billLine}
+    <div class="stats"><span>Spent since ${c.cycle_start ? esc(fdate(c.cycle_start)) : 'last statement'}<b>${INR(c.spent_cycle)}</b></span><span>Outstanding<b>${INR(c.outstanding)}</b></span><span>Next statement<b>${c.statement_date ? esc(fdate(c.statement_date)) : '—'}</b></span><span>Limit used<b class="${util > .3 ? 'down' : ''}">${Math.round(util * 100)}% of ${INRk(c.limit)}</b></span></div>${billLine}
     ${c.txns && c.txns.length ? `<ul>${c.txns.map((t) => `<li><span>${esc(fdate(t.day))} · ${esc(t.merchant)}</span><b>${INR(t.amount)}</b></li>`).join('')}</ul>${c.n_txns > c.txns.length ? `<p class="note">+${c.n_txns - c.txns.length} more this cycle</p>` : ''}` : `<p class="note">${stale ? 'Fold hasn\'t synced this card recently, so recent spends may be missing. Re-link it in Fold.' : 'No spends this cycle.'}</p>`}</div>`; }).join('')}</div></div>`;
 }
 function lineChart(rows) {

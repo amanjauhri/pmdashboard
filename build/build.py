@@ -180,15 +180,21 @@ def cards_block(cards, cur, today):
         if c.get("is_closed") or (c.get("relationship") or {}).get("role") == "CHILD":
             continue
         cc, pc = c.get("current_cycle") or {}, c.get("previous_cycle") or {}
-        start = (pc.get("statement_date") or "")[:10]
-        tx = [t for t in (cur or []) if t.get("account_id") == c["id"] and (t.get("type") or "DEBIT").upper() == "DEBIT" and ist_day(t["date"]) >= (start or "0")]
+        # A statement dated D includes spends made on D, so the new cycle starts the day after.
+        # Fold's own amount_spent_this_cycle counts from D itself, which overstates the cycle.
+        sd = (pc.get("statement_date") or "")[:10]
+        start = (dt.date.fromisoformat(sd) + dt.timedelta(days=1)).isoformat() if sd else ""
+        mine = [t for t in (cur or []) if t.get("account_id") == c["id"]]
+        tx = [t for t in mine if (t.get("type") or "DEBIT").upper() == "DEBIT" and ist_day(t["date"]) >= (start or "0")]
+        refunds = sum(amt(t) for t in mine if (t.get("type") or "").upper() == "CREDIT" and ist_day(t["date"]) >= (start or "0"))
         tx.sort(key=lambda t: t["date"], reverse=True)
         synced = (c.get("last_synced_at") or "")[:10]
         stale_days = (today - dt.date.fromisoformat(synced)).days if synced else None
         lim = float(cc.get("credit_limit") or pc.get("credit_limit") or 0)
         out.append({
             "name": (lambda i, n: n if n.lower().startswith(i.lower()) else f"{i} {n}".strip())(c.get('issuer_name') or '', (c.get('card_name') or '').title()), "last4": c.get("card_last_four"),
-            "spent_cycle": float(cc.get("amount_spent_this_cycle") or 0), "statement_date": (cc.get("statement_date") or "")[:10],
+            "spent_cycle": (sum(amt(t) for t in tx) - refunds) if (start and tx) else float(cc.get("amount_spent_this_cycle") or 0),
+            "cycle_start": start, "statement_date": (cc.get("statement_date") or "")[:10],
             "outstanding": float(c.get("outstanding") or 0), "limit": lim,
             "last_bill": float(pc.get("total_amount_due") or 0), "last_due": (pc.get("payment_due_date") or "")[:10],
             "last_paid_recorded": float(pc.get("amount_paid") or 0),
