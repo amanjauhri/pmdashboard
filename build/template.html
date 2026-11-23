@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>PM Dashboard</title>
 <style>
-:root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
+:root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--li:#0a66c2;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:24px 18px 60px;display:flex;flex-direction:column;gap:28px}
@@ -118,6 +118,13 @@ dl.ans dd{margin:0}
 .term p{margin:0;font-size:13px}
 .script p{margin:0 0 10px;font-size:14px;line-height:1.55}
 .script b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);margin-bottom:2px}
+.li{display:flex;flex-direction:column;gap:10px}
+.li .meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted)}
+.li h4{margin:0;font-size:16px;line-height:1.35}
+.li h4 a{color:inherit}
+.li ul.pts{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.li .links{display:flex;flex-wrap:wrap;gap:6px}
+.li .links a{font-size:11px;color:var(--fg);text-decoration:none;padding:3px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--acc) 40%,transparent)}
 .foot{text-align:center;font-size:11px;color:var(--muted)}
 </style>
 </head>
@@ -202,6 +209,17 @@ function cardsHtml(cards, today) {
     <div class="stats"><span>Spent since ${c.cycle_start ? esc(fdate(c.cycle_start)) : 'last statement'}<b>${INR(c.spent_cycle)}</b></span><span>Outstanding<b>${INR(c.outstanding)}</b></span><span>Next statement<b>${c.statement_date ? esc(fdate(c.statement_date)) : '—'}</b></span><span>Limit used<b class="${util > .3 ? 'down' : ''}">${Math.round(util * 100)}% of ${INRk(c.limit)}</b></span></div>${billLine}
     ${c.txns && c.txns.length ? `<ul>${c.txns.map((t) => `<li><span>${esc(fdate(t.day))} · ${esc(t.merchant)}</span><b>${INR(t.amount)}</b></li>`).join('')}</ul>${c.n_txns > c.txns.length ? `<p class="note">+${c.n_txns - c.txns.length} more this cycle</p>` : ''}` : `<p class="note">${stale ? 'Fold hasn\'t synced this card recently, so recent spends may be missing. Re-link it in Fold.' : 'No spends this cycle.'}</p>`}</div>`; }).join('')}</div></div>`;
 }
+function liCard(r) {
+  const u = (x) => /^https?:[/][/]/.test(String(x || '')) ? String(x) : '';
+  const art = u(r.article_url), post = u(r.post_url);
+  return `<div class="card li"><div class="meta"><span>📩 Shared ${r.shared_at ? esc(fdate(String(r.shared_at).slice(0, 10))) : ''}</span>${r.author ? `<span>✍️ ${esc(r.author)}${r.posted_on ? ' · posted ' + esc(r.posted_on) : ''}</span>` : ''}${r.source ? `<span>📰 ${esc(r.source)}</span>` : ''}</div>
+  <h4>${art ? `<a href="${esc(art)}" target="_blank" rel="noopener">${esc(r.title || art)} ↗</a>` : esc(r.title || 'Shared post')}</h4>
+  ${r.post_gist ? `<p class="note"><b>What they said:</b> ${esc(r.post_gist)}</p>` : ''}
+  ${lines(r.summary).length ? `<ul class="pts">${lines(r.summary).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+  ${r.why ? `<p class="why"><b>Why it matters for you:</b> ${esc(r.why)}</p>` : ''}
+  ${r.note ? `<p class="warn">${esc(r.note)}</p>` : ''}
+  <div class="links">${post ? `<a href="${esc(post)}" target="_blank" rel="noopener">LinkedIn post ↗</a>` : ''}${(r.links || []).filter((l) => u(l.url)).map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.title || 'Link')} ↗</a>`).join('')}</div></div>`;
+}
 function lineChart(rows) {
   if (!rows || rows.length < 2) return `<p class="note">${rows && rows.length ? `Tracking started ${fdate(rows[0].date)} at ${INR(rows[0].value)}. The line appears after the next morning's snapshot.` : 'No snapshots yet.'}</p>`;
   const W = 640, H = 160, m = {t: 10, r: 10, b: 22, l: 56};
@@ -241,7 +259,7 @@ function render(D) {
 
   document.getElementById('app').innerHTML = `<div class="wrap">
   <header class="hero"><p class="eyebrow">${esc(fdate(D.today, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}))}</p><h1>Good morning, ${esc(D.name || 'there')}</h1><p class="sub">Money, markets, one interview case, one AI idea and one fintech deep-dive. Refreshed ${esc(D.generated_label)}.</p>
-  <nav class="nav"><a href="#money" style="--acc:var(--fin)">💸 Money</a><a href="#markets" style="--acc:var(--mkt)">📈 Portfolio</a><a href="#case" style="--acc:var(--case)">🧩 PM case</a><a href="#ai" style="--acc:var(--ai)">🤖 AI today</a><a href="#lab" style="--acc:var(--lab)">🏦 Fintech PM Lab</a></nav></header>
+  <nav class="nav"><a href="#money" style="--acc:var(--fin)">💸 Money</a><a href="#markets" style="--acc:var(--mkt)">📈 Portfolio</a><a href="#case" style="--acc:var(--case)">🧩 PM case</a><a href="#ai" style="--acc:var(--ai)">🤖 AI today</a><a href="#lab" style="--acc:var(--lab)">🏦 Fintech PM Lab</a><a href="#li" style="--acc:var(--li)">🔗 LinkedIn reads</a></nav></header>
 
   <section class="sec" id="money" style="--acc:var(--fin)"><div class="sec-h"><div class="ico">💸</div><h2>Daily spend</h2><p class="sub">${esc(F.month_label || '')} · card bills and investments left out</p></div>
   ${F.ok === false ? '<p class="warn">Fold data was unavailable at refresh time.</p>' : ''}
@@ -283,6 +301,9 @@ function render(D) {
   ${B.lab_term ? (() => { const [w, mean, ex] = String(B.lab_term).split('|'); return `<div class="term"><div class="h" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)">📘 Term of the day</div><div class="w">${esc(w)}</div><p>${esc(mean)}</p>${ex ? `<p class="note"><b>Example:</b> ${esc(ex)}</p>` : ''}</div>`; })() : ''}
   <div class="card"><h3>🎤 Interview question</h3><p class="prompt" style="font-size:17px">${esc(B.lab_interview)}</p>${B.lab_answer ? `<details class="d"><summary>Short model answer</summary><p style="margin:0">${esc(B.lab_answer)}</p></details>` : ''}</div>
   ${B.lab_metrics ? `<div class="card"><h3>📊 Metrics to know, explained</h3>${lines(B.lab_metrics).some((l) => l.includes('|')) ? ans(B.lab_metrics) : `<p>${esc(B.lab_metrics)}</p>`}</div>` : ''}</section>
+  <section class="sec" id="li" style="--acc:var(--li)"><div class="sec-h"><div class="ico">🔗</div><h2>LinkedIn reads</h2><p class="sub">Links you emailed to yourself, read and summarised each morning</p></div>
+  ${(D.li || []).length ? `<div class="grid">${D.li.map(liCard).join('')}</div>` : ''}
+  <details class="d"${(D.li || []).length ? '' : ' open'}><summary>How to add a post</summary><ol class="steps"><li><b>Find a post</b><span>On LinkedIn, open a post that links to an article. If you can, tap the article itself and share that page's link; it gives the fullest summary.</span></li><li><b>Email it to yourself</b><span>Tap Share → Gmail (or copy the link) and send it to your own Gmail address. Add a note in the body if you want a specific angle.</span></li><li><b>Read it here next morning</b><span>The 9:33am refresh reads the post, the article and the key links inside it, and adds the summary here.</span></li></ol></details></section>
   <p class="foot">Refreshed ${esc(D.generated_label)} · <a href="#" id="forget" style="color:inherit">Forget this device</a></p>
   </div>`;
   const hs = document.getElementById('hs'); if (hs) hs.addEventListener('change', () => { document.getElementById('hb').innerHTML = holdingsRows(h, hs.value); });

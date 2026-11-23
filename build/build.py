@@ -13,6 +13,7 @@ Usage:
   kite_mf.json                    Kite mutual_funds mode=holdings answer (list)
   history.json                    list of snapshots {date, stocks_value, stocks_invested, mf_value, mf_invested}
   brief.json, news.json           the dashboard's daily_brief / ai_news files ({"rows":[...]})
+  linkedin.json                   list of summarised LinkedIn shares (see the scheduled task prompt for fields)
 Plaintext never leaves this machine: only the encrypted blob is written into index.html.
 """
 import argparse, base64, calendar, datetime as dt, json, os, re, secrets, sys
@@ -294,7 +295,8 @@ def cmd_build(a):
     snap = pf.pop("snapshot")
     brief = (rows_of(load(raw, "brief.json")) or [{}])[0]
     data = {"name": a.name, "today": today.isoformat(), "generated_label": now.strftime("%d %b %Y, %I:%M %p IST"),
-            "fin": fin, "pf": pf, "brief": brief, "news": rows_of(load(raw, "news.json"))}
+            "fin": fin, "pf": pf, "brief": brief, "news": rows_of(load(raw, "news.json")),
+            "li": sorted([r for r in rows_of(load(raw, "linkedin.json")) if isinstance(r, dict)], key=lambda r: r.get("shared_at") or "", reverse=True)[:12]}
     with open(os.path.join(HERE, "keywrap.json")) as f:
         kw = json.load(f)
     iv = secrets.token_bytes(12)
@@ -308,7 +310,7 @@ def cmd_build(a):
     if snap and a.snapshot_out:
         with open(a.snapshot_out, "w") as f:
             json.dump(snap, f)
-    print(json.dumps({"fin_ok": fin.get("ok"), "cards": len(fin.get("cards") or []), "pf_stale": pf["stale"], "holdings": len(pf["holdings"]), "brief_date": brief.get("date"), "news": len(data["news"]), "snapshot": snap}))
+    print(json.dumps({"fin_ok": fin.get("ok"), "cards": len(fin.get("cards") or []), "pf_stale": pf["stale"], "holdings": len(pf["holdings"]), "brief_date": brief.get("date"), "news": len(data["news"]), "linkedin": len(data["li"]), "snapshot": snap}))
 
 
 if __name__ == "__main__":
