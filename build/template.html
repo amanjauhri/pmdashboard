@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>PM Dashboard</title>
 <style>
-:root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--li:#0a66c2;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
+:root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--li:#0a66c2;--brain:#a855f7;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:24px 18px 60px;display:flex;flex-direction:column;gap:28px}
@@ -126,6 +126,23 @@ dl.ans dd{margin:0}
 .li .links{display:flex;flex-wrap:wrap;gap:6px}
 .li .links a{font-size:11px;color:var(--fg);text-decoration:none;padding:3px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--acc) 40%,transparent)}
 .foot{text-align:center;font-size:11px;color:var(--muted)}
+
+.qlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.qlist li{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04)}
+.qlist li span{color:var(--muted);font-size:12px;white-space:nowrap}
+.qlist li a{color:var(--fg);word-break:break-all}
+.bg-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.bg-tabs button,.bg-btn{font:inherit;font-size:13px;color:var(--fg);background:rgba(255,255,255,.05);border:1px solid color-mix(in srgb,var(--acc) 40%,var(--line));border-radius:999px;padding:7px 14px;cursor:pointer}
+.bg-tabs button.on,.bg-btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.bg-stage{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px;border-radius:14px;background:rgba(0,0,0,.18)}
+.bg-big{font-size:clamp(28px,8vw,46px);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.bg-big.ok{color:var(--up)}.bg-big.no{color:var(--down);font-size:24px}
+.bg-sub{margin:0;color:var(--muted);font-size:13px}
+.bg-in{font:inherit;font-size:22px;text-align:center;width:min(240px,80vw);padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.bg-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.bg-stats{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.bg-stats b{color:var(--fg)}
+.recall li{font-size:13px}
 </style>
 </head>
 <body>
@@ -259,7 +276,7 @@ function render(D) {
 
   document.getElementById('app').innerHTML = `<div class="wrap">
   <header class="hero"><p class="eyebrow">${esc(fdate(D.today, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}))}</p><h1>Good morning, ${esc(D.name || 'there')}</h1><p class="sub">Money, markets, one interview case, one AI idea and one fintech deep-dive. Refreshed ${esc(D.generated_label)}.</p>
-  <nav class="nav"><a href="#money" style="--acc:var(--fin)">💸 Money</a><a href="#markets" style="--acc:var(--mkt)">📈 Portfolio</a><a href="#case" style="--acc:var(--case)">🧩 PM case</a><a href="#ai" style="--acc:var(--ai)">🤖 AI today</a><a href="#lab" style="--acc:var(--lab)">🏦 Fintech PM Lab</a><a href="#li" style="--acc:var(--li)">🔗 LinkedIn reads</a></nav></header>
+  <nav class="nav"><a href="#money" style="--acc:var(--fin)">💸 Money</a><a href="#markets" style="--acc:var(--mkt)">📈 Portfolio</a><a href="#case" style="--acc:var(--case)">🧩 PM case</a><a href="#ai" style="--acc:var(--ai)">🤖 AI today</a><a href="#lab" style="--acc:var(--lab)">🏦 Fintech PM Lab</a><a href="#li" style="--acc:var(--li)">🔗 LinkedIn reads</a><a href="#brain" style="--acc:var(--brain)">🧠 Brain gym</a></nav></header>
 
   <section class="sec" id="money" style="--acc:var(--fin)"><div class="sec-h"><div class="ico">💸</div><h2>Daily spend</h2><p class="sub">${esc(F.month_label || '')} · card bills and investments left out</p></div>
   ${F.ok === false ? '<p class="warn">Fold data was unavailable at refresh time.</p>' : ''}
@@ -302,15 +319,123 @@ function render(D) {
   <div class="card"><h3>🎤 Interview question</h3><p class="prompt" style="font-size:17px">${esc(B.lab_interview)}</p>${B.lab_answer ? `<details class="d"><summary>Short model answer</summary><p style="margin:0">${esc(B.lab_answer)}</p></details>` : ''}</div>
   ${B.lab_metrics ? `<div class="card"><h3>📊 Metrics to know, explained</h3>${lines(B.lab_metrics).some((l) => l.includes('|')) ? ans(B.lab_metrics) : `<p>${esc(B.lab_metrics)}</p>`}</div>` : ''}</section>
   <section class="sec" id="li" style="--acc:var(--li)"><div class="sec-h"><div class="ico">🔗</div><h2>LinkedIn reads</h2><p class="sub">One deep read a day from what you shared</p></div>
-  ${(() => { const L = D.li || [], shown = L.filter((r) => r.shown_on).sort((a, b) => String(b.shown_on).localeCompare(String(a.shown_on))), queued = L.filter((r) => !r.shown_on);
+  ${(() => { const L = D.li || [], shown = L.filter((r) => r.shown_on).sort((a, b) => String(b.shown_on).localeCompare(String(a.shown_on))), unread = L.filter((r) => !r.shown_on && r.status === 'unreadable'), queued = L.filter((r) => !r.shown_on && r.status !== 'unreadable').sort((a, b) => String(a.shared_at).localeCompare(String(b.shared_at)));
     const feat = shown.find((r) => r.shown_on === D.today) || shown[0], past = shown.filter((r) => r !== feat).slice(0, 10);
-    return (feat ? `<p class="sub">${feat.shown_on === D.today ? "Today's read" : 'Latest read · ' + esc(fdate(feat.shown_on))}${feat.auto ? ' · picked for you (your queue was empty)' : ''} · ${queued.length ? queued.length + ' more waiting in your queue' : 'queue empty'}</p>${liCard(feat)}` : '<p class="note">Nothing yet. Share a link and it appears here the next morning.</p>')
+    const link = (r) => { const x = (r.shared_links || []).find((l) => /^https?:[/][/]/.test(String(l))) || ''; return x ? `<a href="${esc(x)}" target="_blank" rel="noopener">${esc(r.share_subject || x)}</a>` : esc(r.share_subject || r.share_text || 'Shared item'); };
+    const qrow = (r) => `<li><span>${r.shared_at ? esc(fdate(String(r.shared_at).slice(0, 10))) : ''}</span>${link(r)}</li>`;
+    return (feat ? `<p class="sub">${feat.shown_on === D.today ? "Today's read" : 'Latest read · ' + esc(fdate(feat.shown_on))}${feat.auto ? ' · picked for you' : ' · from your queue'} · ${queued.length ? queued.length + ' more waiting in your queue' : 'queue empty'}</p>${liCard(feat)}` : '<p class="note">Nothing yet. Share a link and it appears here the next morning.</p>')
+      + (queued.length ? `<details class="d" open><summary>Waiting in your queue (${queued.length}), oldest first</summary><ul class="qlist">${queued.map(qrow).join('')}</ul></details>` : '')
+      + (unread.length ? `<details class="d" open><summary>Couldn't be opened automatically (${unread.length})</summary><p class="warn">LinkedIn blocks automated reading of short lnkd.in links, so these have no words to search on. Tap one to open it, then share it again with the updated shortcut, ideally with a few words about it.</p><ul class="qlist">${unread.map(qrow).join('')}</ul></details>` : '')
       + (past.length ? `<details class="d"><summary>Earlier reads (${past.length})</summary><div class="grid">${past.map(liCard).join('')}</div></details>` : ''); })()}
+</section>
+  <section class="sec" id="brain" style="--acc:var(--brain)"><div class="sec-h"><div class="ico">🧠</div><h2>Brain gym</h2><p class="sub">About 5 minutes: memory, speed and focus</p></div>
+  <div class="card tint"><div class="bg-stats" id="bg-stats"></div><div class="bg-tabs" id="bg-tabs"></div><div class="bg-stage" id="bg-stage"></div></div>
+  ${(() => { const H = String(B.history || '').split(';').map((x) => x.trim()).filter(Boolean), picks = [[1, 'Last brief'], [3, '3 briefs ago'], [7, 'About 1–2 weeks ago']].filter(([i]) => H[i]);
+    return picks.length ? `<div class="card"><h3>🔁 Recall check (1 minute)</h3><p class="note">Pulling things back out of memory is what makes them stick. Say each answer out loud in one sentence before opening the hint.</p><ul class="qa recall">${picks.map(([i, lab]) => { const [co, con, lt, term] = H[i].split('|'); return `<li><b>${esc(lab)}</b><span>${term ? `What is <i>${esc(con || '')}</i>, and what does <i>${esc(term)}</i> mean?` : `Explain <i>${esc(con || '')}</i> in one sentence.`}</span><details class="d" style="padding:6px 10px;margin-top:6px"><summary style="font-size:12px">Hint</summary><p class="note" style="margin:0">That day's case was about ${esc(co || '')}, and the Lab covered: ${esc(lt || '')}.</p></details></li>`; }).join('')}</ul></div>` : ''; })()}
+  <p class="note" style="font-size:11px">Games mainly make you better at the game itself. What helps everyday memory most is recalling what you learned (the Recall check), good sleep, and regular exercise.</p>
 </section>
   <p class="foot">Refreshed ${esc(D.generated_label)} · <a href="#" id="forget" style="color:inherit">Forget this device</a></p>
   </div>`;
   const hs = document.getElementById('hs'); if (hs) hs.addEventListener('change', () => { document.getElementById('hb').innerHTML = holdingsRows(h, hs.value); });
   document.getElementById('forget').addEventListener('click', (e) => { e.preventDefault(); try { localStorage.removeItem('pmd_k'); } catch (_) {} location.reload(); });
+  initBrain();
+}
+function initBrain() {
+  const stage = document.getElementById('bg-stage'), tabs = document.getElementById('bg-tabs'), statsEl = document.getElementById('bg-stats');
+  if (!stage) return;
+  const today = new Date().toLocaleDateString('en-CA', {timeZone: 'Asia/Kolkata'});
+  const load = () => { try { return JSON.parse(localStorage.getItem('pmd_brain') || '{}') || {}; } catch (_) { return {}; } };
+  const store = (o) => { try { localStorage.setItem('pmd_brain', JSON.stringify(o)); } catch (_) {} };
+  let timers = [];
+  const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+  const clear = () => { timers.forEach(clearTimeout); timers = []; };
+  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  function streak(days) {
+    const set = new Set(days || []); let n = 0; const d = new Date(today + 'T12:00:00Z');
+    if (!set.has(today)) d.setUTCDate(d.getUTCDate() - 1);
+    for (let i = 0; i < 90; i++) { const k = d.toISOString().slice(0, 10), wd = d.getUTCDay();
+      if (set.has(k)) n++; else if (wd !== 0 && wd !== 6) break;
+      d.setUTCDate(d.getUTCDate() - 1); }
+    return n;
+  }
+  function stats() {
+    const s = load(), b = s.best || {};
+    statsEl.innerHTML = `<span>🔥 Streak <b>${streak(s.days)}</b> day${streak(s.days) === 1 ? '' : 's'} (weekends don't break it)</span><span>🔢 Best memory <b>${b.digits || '–'}</b> digits</span><span>➗ Best maths <b>${b.maths || '–'}</b>/min</span><span>🎨 Best focus <b>${b.colour ?? '–'}</b></span>`;
+  }
+  function save(key, val) {
+    const s = load(); s.best = s.best || {}; s.days = s.days || [];
+    const isBest = s.best[key] === undefined || val > s.best[key];
+    if (isBest) s.best[key] = val;
+    if (!s.days.includes(today)) { s.days.push(today); s.days = s.days.slice(-120); }
+    store(s); stats(); return isBest;
+  }
+  const intro = (title, what, why, start) => { stage.innerHTML = `<div class="bg-big" style="font-size:22px;letter-spacing:0">${title}</div><p class="bg-sub">${what}</p><p class="bg-sub"><b>Trains:</b> ${why}</p><button class="bg-btn pri" id="bg-go">Start</button>`; document.getElementById('bg-go').onclick = start; };
+
+  function digits() {
+    let len = 4, round = 0, best = 0; const ROUNDS = 8;
+    const next = () => {
+      if (round >= ROUNDS) return done();
+      round++; let n = String(rnd(1, 9)); while (n.length < len) n += rnd(0, 9);
+      stage.innerHTML = `<p class="bg-sub">Round ${round} of ${ROUNDS} · ${len} digits · memorise</p><div class="bg-big">${n.replace(/(\d{3})(?=\d)/g, '$1 ')}</div>`;
+      later(() => {
+        stage.innerHTML = `<p class="bg-sub">Type the number you saw</p><form id="bg-f" class="bg-row"><input id="bg-i" class="bg-in" inputmode="numeric" autocomplete="off"><button class="bg-btn pri">Check</button></form>`;
+        const i = document.getElementById('bg-i'); i.focus();
+        document.getElementById('bg-f').onsubmit = (e) => { e.preventDefault();
+          const ok = i.value.replace(/\D/g, '') === n;
+          if (ok) { best = Math.max(best, len); len++; } else len = Math.max(3, len - 1);
+          stage.innerHTML = `<div class="bg-big ${ok ? 'ok' : 'no'}">${ok ? '✓ Correct' : '✗ It was ' + n}</div>`;
+          later(next, ok ? 700 : 1500); };
+      }, 900 + len * 500);
+    };
+    const done = () => { const nb = save('digits', best);
+      stage.innerHTML = `<div class="bg-big">${best || 0} digits</div><p class="bg-sub">${nb && best ? 'New personal best! ' : ''}Most adults hold about 7. Tip: group digits in threes, like a phone number, and say them in your head.</p><button class="bg-btn pri" id="bg-again">Go again</button>`;
+      document.getElementById('bg-again').onclick = digits; };
+    intro('Number memory', 'A number flashes up, then hides. Type it back. It grows by one digit when you get it right.', 'working memory, the mental notepad you use to hold numbers, names and ideas while you think.', next);
+  }
+
+  function maths() {
+    let score = 0, ans = 0, end = 0;
+    const gen = () => { const op = rnd(0, 2); let a, b, q;
+      if (op === 0) { a = rnd(12, 99); b = rnd(12, 99); q = `${a} + ${b}`; ans = a + b; }
+      else if (op === 1) { a = rnd(20, 120); b = rnd(3, a - 1); q = `${a} − ${b}`; ans = a - b; }
+      else { a = rnd(3, 12); b = rnd(3, 19); q = `${a} × ${b}`; ans = a * b; }
+      document.getElementById('bg-q').textContent = q; const i = document.getElementById('bg-i'); i.value = ''; i.focus(); };
+    const start = () => { score = 0; end = Date.now() + 60000;
+      stage.innerHTML = `<p class="bg-sub"><span id="bg-t">60</span>s left · <span id="bg-s">0</span> correct</p><div class="bg-big" id="bg-q"></div><div class="bg-row"><input id="bg-i" class="bg-in" inputmode="numeric" autocomplete="off"><button class="bg-btn" id="bg-skip">Skip</button></div>`;
+      const i = document.getElementById('bg-i');
+      i.oninput = () => { if (Number(i.value) === ans && i.value !== '') { score++; document.getElementById('bg-s').textContent = score; gen(); } };
+      document.getElementById('bg-skip').onclick = gen; gen();
+      const tick = () => { const left = Math.max(0, Math.ceil((end - Date.now()) / 1000)); const t = document.getElementById('bg-t'); if (!t) return; t.textContent = left; if (left <= 0) return done(); later(tick, 250); }; tick(); };
+    const done = () => { const nb = save('maths', score);
+      stage.innerHTML = `<div class="bg-big">${score} in a minute</div><p class="bg-sub">${nb && score ? 'New personal best! ' : ''}Tip: for 47 + 38, do 47 + 40 − 2. Rounding and adjusting is faster than carrying digits.</p><button class="bg-btn pri" id="bg-again">Go again</button>`;
+      document.getElementById('bg-again').onclick = start; };
+    intro('Quick maths', 'Solve as many as you can in 60 seconds. The next one appears as soon as your answer is right.', 'processing speed, useful for estimation questions and quick numbers in meetings.', start);
+  }
+
+  function colour() {
+    const C = [['RED', '#f43f5e'], ['GREEN', '#22c55e'], ['BLUE', '#3b82f6'], ['YELLOW', '#eab308']];
+    let ok = 0, bad = 0, ink = 0, shownAt = 0, times = [], end = 0;
+    const gen = () => { const w = rnd(0, 3); ink = Math.random() < 0.75 ? (w + rnd(1, 3)) % 4 : w;
+      const el = document.getElementById('bg-w'); el.textContent = C[w][0]; el.style.color = C[ink][1]; shownAt = performance.now(); };
+    const start = () => { ok = 0; bad = 0; times = []; end = Date.now() + 30000;
+      stage.innerHTML = `<p class="bg-sub"><span id="bg-t">30</span>s · tap the colour of the INK, not the word</p><div class="bg-big" id="bg-w"></div><div class="bg-row">${C.map((c, k) => `<button class="bg-btn" data-k="${k}">${c[0].toLowerCase()}</button>`).join('')}</div>`;
+      stage.querySelectorAll('[data-k]').forEach((btn) => { btn.onclick = () => { if (Date.now() > end) return; times.push(performance.now() - shownAt);
+        if (Number(btn.dataset.k) === ink) ok++; else { bad++; stage.style.outline = '2px solid var(--down)'; later(() => { stage.style.outline = ''; }, 200); } gen(); }; });
+      gen();
+      const tick = () => { const left = Math.max(0, Math.ceil((end - Date.now()) / 1000)); const t = document.getElementById('bg-t'); if (!t) return; t.textContent = left; if (left <= 0) return done(); later(tick, 250); }; tick(); };
+    const done = () => { const sc = ok - bad, avg = times.length ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) : 0, nb = save('colour', sc);
+      stage.innerHTML = `<div class="bg-big">Score ${sc}</div><p class="bg-sub">${ok} right, ${bad} wrong, about ${(avg / 1000).toFixed(2)}s per answer. ${nb ? 'New personal best! ' : ''}Accuracy first, then speed.</p><button class="bg-btn pri" id="bg-again">Go again</button>`;
+      document.getElementById('bg-again').onclick = start; };
+    intro('Colour clash', 'A colour word appears in a different colour of ink. Tap the ink colour as fast as you can for 30 seconds.', 'focus and fast decisions: ignoring the obvious-but-wrong signal and acting on the right one.', start);
+  }
+
+  const D = [['🔢 Number memory', digits], ['➗ Quick maths', maths], ['🎨 Colour clash', colour]];
+  const pick = (k) => { clear(); stage.style.outline = ''; tabs.querySelectorAll('button').forEach((b, j) => b.classList.toggle('on', j === k)); D[k][1](); };
+  tabs.innerHTML = D.map((d) => `<button type="button">${d[0]}</button>`).join('');
+  tabs.querySelectorAll('button').forEach((b, k) => { b.onclick = () => pick(k); });
+  stats();
+  const dow = new Date(today + 'T12:00:00Z').getUTCDay();
+  pick(dow % 3);
 }
 </script>
 </body>
