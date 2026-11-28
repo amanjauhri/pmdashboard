@@ -296,6 +296,7 @@ def cmd_build(a):
     brief = (rows_of(load(raw, "brief.json")) or [{}])[0]
     data = {"name": a.name, "today": today.isoformat(), "generated_label": now.strftime("%d %b %Y, %I:%M %p IST"),
             "fin": fin, "pf": pf, "brief": brief, "news": rows_of(load(raw, "news.json")),
+            "vc": json.load(open(os.path.join(HERE, "venture.json"))) if os.path.exists(os.path.join(HERE, "venture.json")) else None,
             "li": sorted([r for r in rows_of(load(raw, "linkedin.json")) if isinstance(r, dict)], key=lambda r: r.get("shown_on") or r.get("shared_at") or "", reverse=True)[:40]}
     with open(os.path.join(HERE, "keywrap.json")) as f:
         kw = json.load(f)

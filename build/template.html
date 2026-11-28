@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>PM Dashboard</title>
 <style>
-:root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--li:#0a66c2;--brain:#a855f7;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
+:root{--bg:#0f1117;--panel:#171a23;--line:#262b38;--fg:#e8eaf0;--muted:#9aa1b2;--fin:#14b8a6;--mkt:#6366f1;--case:#f59e0b;--ai:#ec4899;--lab:#0ea5e9;--li:#0a66c2;--brain:#a855f7;--vc:#10b981;--up:#22c55e;--down:#f43f5e;--serif:Georgia,"Times New Roman",serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:24px 18px 60px;display:flex;flex-direction:column;gap:28px}
@@ -142,7 +142,22 @@ dl.ans dd{margin:0}
 .bg-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .bg-stats{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
 .bg-stats b{color:var(--fg)}
-.recall li{font-size:13px}
+.vc-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.vc-prog{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 4px}
+.vc-prog i{display:block;height:100%;background:var(--acc)}
+.vc-idea{font-family:var(--serif);font-size:19px;line-height:1.4;margin:6px 0 0}
+.vc-body p{margin:0 0 10px;font-size:14px;line-height:1.6}
+.vc-ex{border-radius:14px;padding:14px;background:color-mix(in srgb,var(--acc) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--acc) 25%,var(--line))}
+.vc-ex ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:13.5px;line-height:1.5}
+.vc-ex table{margin-top:12px}
+.vc-nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.vc-nav select{max-width:100%}
+.vc-map{display:grid;gap:10px}
+.vc-map .wk{font-size:12px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+.vc-map ol{margin:0;padding-left:20px;font-size:13px;display:flex;flex-direction:column;gap:3px}
+.vc-map a{color:var(--fg);cursor:pointer}
+.vc-map li.done a{color:var(--muted);text-decoration:line-through}
+.vc-map li.cur a{color:var(--acc);font-weight:700}
 </style>
 </head>
 <body>
@@ -264,7 +279,8 @@ function render(D) {
   const ans = (s) => `<dl class="ans">${lines(s).map((l) => { const [t, ...r] = l.split('|'); return `<dt>${esc(t)}</dt><dd>${esc(r.join('|'))}</dd>`; }).join('')}</dl>`;
   const qa = (s) => `<ul class="qa">${lines(s).map((l) => { const [t, ...r] = l.split('|'); return `<li><b>${esc(t)}</b>${r.length ? `<span>${esc(r.join('|'))}</span>` : ''}</li>`; }).join('')}</ul>`;
   const flow = (s) => `<div class="flow">${String(s || '').split('|').map((p, i) => (i ? '<em>→</em>' : '') + `<span>${esc(p)}</span>`).join('')}</div>`;
-  const stale = B.date && B.date < D.today ? '<p class="warn">Today\'s brief didn\'t arrive; showing the most recent one.</p>' : '';
+  const lastWk = (() => { const d = new Date(D.today + 'T12:00:00Z'); while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d.setUTCDate(d.getUTCDate() - 1); return d.toISOString().slice(0, 10); })();
+  const stale = B.date && B.date < lastWk ? '<p class="warn">Today\'s brief didn\'t arrive; showing the most recent one.</p>' : '';
   const h = P.holdings || [];
   const pfWarn = P.stale ? `<p class="warn">Kite's daily login had expired at refresh time. Totals below are from the ${esc(fdate(P.as_of))} snapshot; stock details are hidden until the next successful refresh.</p>` : '';
   const winners = h.filter((r) => ret(r) > 0).sort((a, b) => ret(b) - ret(a)).slice(0, 5);
@@ -276,7 +292,7 @@ function render(D) {
 
   document.getElementById('app').innerHTML = `<div class="wrap">
   <header class="hero"><p class="eyebrow">${esc(fdate(D.today, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}))}</p><h1>Good morning, ${esc(D.name || 'there')}</h1><p class="sub">Money, markets, one interview case, one AI idea and one fintech deep-dive. Refreshed ${esc(D.generated_label)}.</p>
-  <nav class="nav"><a href="#money" style="--acc:var(--fin)">💸 Money</a><a href="#markets" style="--acc:var(--mkt)">📈 Portfolio</a><a href="#case" style="--acc:var(--case)">🧩 PM case</a><a href="#ai" style="--acc:var(--ai)">🤖 AI today</a><a href="#lab" style="--acc:var(--lab)">🏦 Fintech PM Lab</a><a href="#li" style="--acc:var(--li)">🔗 LinkedIn reads</a><a href="#brain" style="--acc:var(--brain)">🧠 Brain gym</a></nav></header>
+  <nav class="nav"><a href="#money" style="--acc:var(--fin)">💸 Money</a><a href="#markets" style="--acc:var(--mkt)">📈 Portfolio</a><a href="#case" style="--acc:var(--case)">🧩 PM case</a><a href="#ai" style="--acc:var(--ai)">🤖 AI today</a><a href="#lab" style="--acc:var(--lab)">🏦 Fintech PM Lab</a><a href="#li" style="--acc:var(--li)">🔗 LinkedIn reads</a><a href="#vc" style="--acc:var(--vc)">💼 Venture school</a><a href="#brain" style="--acc:var(--brain)">🧠 Brain gym</a></nav></header>
 
   <section class="sec" id="money" style="--acc:var(--fin)"><div class="sec-h"><div class="ico">💸</div><h2>Daily spend</h2><p class="sub">${esc(F.month_label || '')} · card bills and investments left out</p></div>
   ${F.ok === false ? '<p class="warn">Fold data was unavailable at refresh time.</p>' : ''}
@@ -316,8 +332,7 @@ function render(D) {
   ${steps(B.lab_steps)}
   </div>
   ${B.lab_term ? (() => { const [w, mean, ex] = String(B.lab_term).split('|'); return `<div class="term"><div class="h" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)">📘 Term of the day</div><div class="w">${esc(w)}</div><p>${esc(mean)}</p>${ex ? `<p class="note"><b>Example:</b> ${esc(ex)}</p>` : ''}</div>`; })() : ''}
-  <div class="card"><h3>🎤 Interview question</h3><p class="prompt" style="font-size:17px">${esc(B.lab_interview)}</p>${B.lab_answer ? `<details class="d"><summary>Short model answer</summary><p style="margin:0">${esc(B.lab_answer)}</p></details>` : ''}</div>
-  ${B.lab_metrics ? `<div class="card"><h3>📊 Metrics to know, explained</h3>${lines(B.lab_metrics).some((l) => l.includes('|')) ? ans(B.lab_metrics) : `<p>${esc(B.lab_metrics)}</p>`}</div>` : ''}</section>
+  <div class="card"><h3>🎤 Interview question</h3><p class="prompt" style="font-size:17px">${esc(B.lab_interview)}</p>${B.lab_answer ? `<details class="d"><summary>Short model answer</summary><p style="margin:0">${esc(B.lab_answer)}</p></details>` : ''}</div></section>
   <section class="sec" id="li" style="--acc:var(--li)"><div class="sec-h"><div class="ico">🔗</div><h2>LinkedIn reads</h2><p class="sub">One deep read a day from what you shared</p></div>
   ${(() => { const L = D.li || [], shown = L.filter((r) => r.shown_on).sort((a, b) => String(b.shown_on).localeCompare(String(a.shown_on))), unread = L.filter((r) => !r.shown_on && r.status === 'unreadable'), queued = L.filter((r) => !r.shown_on && r.status !== 'unreadable').sort((a, b) => String(a.shared_at).localeCompare(String(b.shared_at)));
     const feat = shown.find((r) => r.shown_on === D.today) || shown[0], past = shown.filter((r) => r !== feat).slice(0, 10);
@@ -328,17 +343,58 @@ function render(D) {
       + (unread.length ? `<details class="d" open><summary>Couldn't be opened automatically (${unread.length})</summary><p class="warn">LinkedIn blocks automated reading of short lnkd.in links, so these have no words to search on. Tap one to open it, then share it again with the updated shortcut, ideally with a few words about it.</p><ul class="qlist">${unread.map(qrow).join('')}</ul></details>` : '')
       + (past.length ? `<details class="d"><summary>Earlier reads (${past.length})</summary><div class="grid">${past.map(liCard).join('')}</div></details>` : ''); })()}
 </section>
+  <section class="sec" id="vc" style="--acc:var(--vc)"><div class="sec-h"><div class="ico">💼</div><h2>Venture school</h2><p class="sub">Venture capital from zero, 6 weeks, one lesson each weekday</p></div>
+  <div id="vc-root"></div>
+</section>
   <section class="sec" id="brain" style="--acc:var(--brain)"><div class="sec-h"><div class="ico">🧠</div><h2>Brain gym</h2><p class="sub">About 5 minutes: memory, speed and focus</p></div>
   <div class="card tint"><div class="bg-stats" id="bg-stats"></div><div class="bg-tabs" id="bg-tabs"></div><div class="bg-stage" id="bg-stage"></div></div>
-  ${(() => { const H = String(B.history || '').split(';').map((x) => x.trim()).filter(Boolean), picks = [[1, 'Last brief'], [3, '3 briefs ago'], [7, 'About 1–2 weeks ago']].filter(([i]) => H[i]);
-    return picks.length ? `<div class="card"><h3>🔁 Recall check (1 minute)</h3><p class="note">Pulling things back out of memory is what makes them stick. Say each answer out loud in one sentence before opening the hint.</p><ul class="qa recall">${picks.map(([i, lab]) => { const [co, con, lt, term] = H[i].split('|'); return `<li><b>${esc(lab)}</b><span>${term ? `What is <i>${esc(con || '')}</i>, and what does <i>${esc(term)}</i> mean?` : `Explain <i>${esc(con || '')}</i> in one sentence.`}</span><details class="d" style="padding:6px 10px;margin-top:6px"><summary style="font-size:12px">Hint</summary><p class="note" style="margin:0">That day's case was about ${esc(co || '')}, and the Lab covered: ${esc(lt || '')}.</p></details></li>`; }).join('')}</ul></div>` : ''; })()}
-  <p class="note" style="font-size:11px">Games mainly make you better at the game itself. What helps everyday memory most is recalling what you learned (the Recall check), good sleep, and regular exercise.</p>
+  <p class="note" style="font-size:11px">Games mainly make you better at the game itself. What helps everyday memory most is regularly recalling what you learned, good sleep, and exercise.</p>
 </section>
   <p class="foot">Refreshed ${esc(D.generated_label)} · <a href="#" id="forget" style="color:inherit">Forget this device</a></p>
   </div>`;
   const hs = document.getElementById('hs'); if (hs) hs.addEventListener('change', () => { document.getElementById('hb').innerHTML = holdingsRows(h, hs.value); });
   document.getElementById('forget').addEventListener('click', (e) => { e.preventDefault(); try { localStorage.removeItem('pmd_k'); } catch (_) {} location.reload(); });
   initBrain();
+  initVC(D.vc, D.today);
+}
+function initVC(V, todayIso) {
+  const root = document.getElementById('vc-root');
+  if (!root) return;
+  if (!V || !(V.lessons || []).length) { root.innerHTML = '<p class="note">The course will appear after the next refresh.</p>'; return; }
+  const LS = V.lessons, N = LS.length;
+  const today = todayIso || new Date().toLocaleDateString('en-CA', {timeZone: 'Asia/Kolkata'});
+  const load = () => { try { return JSON.parse(localStorage.getItem('pmd_vc') || '{}') || {}; } catch (_) { return {}; } };
+  const store = (o) => { try { localStorage.setItem('pmd_vc', JSON.stringify(o)); } catch (_) {} };
+  // weekday count from start (start = day 1); weekends show Friday's lesson
+  const dayFor = (iso) => { const s = new Date(V.start + 'T12:00:00Z'), t = new Date(iso + 'T12:00:00Z'); if (t < s) return 0; let n = 0; for (let d = new Date(s); d <= t; d.setUTCDate(d.getUTCDate() + 1)) { const w = d.getUTCDay(); if (w !== 0 && w !== 6) n++; } return Math.min(n, N); };
+  const sched = dayFor(today);
+  let cur = Math.max(1, sched);
+  const tbl = (t) => t && t.length ? `<div class="tw"><table><thead><tr>${t[0].map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${t.slice(1).map((r) => `<tr>${r.map((c, i) => `<td${i ? ' class="r"' : ''}>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
+  function draw() {
+    const st = load(), done = new Set(st.done || []), x = LS[cur - 1];
+    const label = sched === 0 ? (cur === 1 ? `Starts ${esc(fdate(V.start, {weekday: 'long', day: 'numeric', month: 'short'}))} · preview of day 1` : 'Reading ahead') : cur === sched ? (sched === N ? "Final lesson" : "Today's lesson") : cur < sched ? 'Earlier lesson' : 'Reading ahead';
+    root.innerHTML = `<div class="card tint">
+      <div class="vc-top"><span class="pill">Week ${x.week} · Day ${x.day} of ${N}</span><span class="sub">${label}</span></div>
+      <p class="sub" style="margin:8px 0 0">${esc(V.weeks[x.week] || '')}</p>
+      <h3 style="margin:6px 0 0;font-size:20px">${esc(x.title)}</h3>
+      <p class="vc-idea">${esc(x.idea)}</p>
+      <div class="vc-prog" title="${done.size} of ${N} lessons understood"><i style="width:${Math.round(done.size / N * 100)}%"></i></div>
+      <p class="note" style="margin:0">${done.size} of ${N} lessons marked understood</p></div>
+    <div class="card vc-body">${(x.explain || []).map((p) => `<p>${esc(p)}</p>`).join('')}</div>
+    <div class="vc-ex"><div class="h" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)">🧮 The example: ${esc(x.ex_title)}</div><ul>${(x.ex || []).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>${tbl(x.table)}</div>
+    ${x.investors ? `<div class="card"><h3>👀 What investors look at</h3><p style="margin:0">${esc(x.investors)}</p></div>` : ''}
+    ${x.q ? `<div class="card"><h3>✅ Check yourself</h3><p class="prompt" style="font-size:16px">${esc(x.q)}</p><details class="d"><summary>Answer</summary><p style="margin:0">${esc(x.a)}</p></details></div>` : ''}
+    <div class="vc-nav"><button class="bg-btn" id="vc-prev" ${cur <= 1 ? 'disabled' : ''}>← Previous</button>
+      <label class="sub" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="vc-done" ${done.has(cur) ? 'checked' : ''}> I understood this</label>
+      <button class="bg-btn" id="vc-next" ${cur >= N ? 'disabled' : ''}>Next →</button></div>
+    <details class="d"><summary>Course map: all ${N} lessons</summary><div class="vc-map">${Object.keys(V.weeks).map((w) => `<div><div class="wk">Week ${w}: ${esc(V.weeks[w])}</div><ol start="${LS.find((l) => String(l.week) === w).day}">${LS.filter((l) => String(l.week) === w).map((l) => `<li class="${l.day === cur ? 'cur' : done.has(l.day) ? 'done' : ''}"><a data-d="${l.day}">${esc(l.title)}</a>${l.day === sched ? ' <span class="sub">· today</span>' : ''}</li>`).join('')}</ol></div>`).join('')}</div></details>`;
+    const go = (d) => { cur = Math.min(N, Math.max(1, d)); draw(); document.getElementById('vc').scrollIntoView({behavior: 'smooth'}); };
+    document.getElementById('vc-prev').onclick = () => go(cur - 1);
+    document.getElementById('vc-next').onclick = () => go(cur + 1);
+    document.getElementById('vc-done').onchange = (e) => { const s2 = load(), d2 = new Set(s2.done || []); e.target.checked ? d2.add(cur) : d2.delete(cur); s2.done = [...d2]; store(s2); draw(); };
+    root.querySelectorAll('[data-d]').forEach((a) => { a.onclick = () => go(Number(a.dataset.d)); });
+  }
+  draw();
 }
 function initBrain() {
   const stage = document.getElementById('bg-stage'), tabs = document.getElementById('bg-tabs'), statsEl = document.getElementById('bg-stats');

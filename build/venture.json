@@ -1,0 +1,1007 @@
+{
+ "start": "2026-11-30",
+ "weeks": {
+  "1": "The basics: owning a slice of a company",
+  "2": "Who gives startups money, step by step",
+  "3": "The investor's side: how a VC fund works",
+  "4": "What investors look at before they say yes",
+  "5": "The deal: cap tables and term sheets",
+  "6": "Endgame: exits, bad days, India, thinking like a VC"
+ },
+ "lessons": [
+  {
+   "day": 1,
+   "week": 1,
+   "title": "Why startups need a different kind of money",
+   "idea": "A startup trades a slice of its future for money today, because no bank will lend to an idea.",
+   "explain": [
+    "A normal business, like a kirana shop, can borrow from a bank. The bank checks that the shop already earns money and can repay the loan with interest.",
+    "A startup is different. It is a young company trying to grow very fast, usually losing money for years first. A bank won't lend to it, because there's nothing to repay the loan with yet and a high chance it fails.",
+    "So startups raise money a different way. Instead of borrowing, they sell a small piece of ownership in the company. The buyer doesn't get repaid. They win only if the company becomes very valuable, and they lose everything if it dies.",
+    "This is called equity funding. Venture capital (VC) is the industry that does this for a living."
+   ],
+   "ex_title": "Meet ChaiCart (made up, and we'll follow it for 6 weeks)",
+   "ex": [
+    "Riya and Arjun in Mumbai have an idea: deliver hot chai and snacks to offices in 10 minutes.",
+    "They need about ₹50 lakh to hire 4 people, build an app and run a pilot in 20 offices.",
+    "A bank asks: 'What do you earn today?' Answer: nothing. Loan refused.",
+    "So they will sell a slice of ChaiCart instead. Over the next lessons you'll see how big a slice, to whom, and at what price."
+   ],
+   "table": null,
+   "investors": "Investors aren't asking 'will this repay me?' They're asking 'could this become huge?' A small chance of a giant outcome is worth more to them than a safe, small one.",
+   "q": "Why does a VC accept that most of its startups will fail?",
+   "a": "Because it isn't lending. It owns slices, and one company becoming enormous can pay for all the failures many times over. We'll see the maths in Week 3."
+  },
+  {
+   "day": 2,
+   "week": 1,
+   "title": "Equity: owning slices of the pie",
+   "idea": "A company is divided into shares. Whoever holds a share owns that fraction of the company.",
+   "explain": [
+    "When a company is created, it issues shares, like cutting a pizza into slices. The number is arbitrary: 100 shares or 10 lakh shares work the same way.",
+    "Your ownership percentage = your shares ÷ all shares. That percentage is what matters, not the raw count.",
+    "If the company is ever sold, or earns profits it pays out, owners get money in proportion to their percentage.",
+    "Founders usually start owning 100% between them. Every time they raise money, they create new shares for investors, so the pizza gets cut into more slices."
+   ],
+   "ex_title": "ChaiCart on day one",
+   "ex": [
+    "ChaiCart is registered as a private limited company with 10,00,000 (10 lakh) shares.",
+    "Riya gets 5,00,000 and Arjun gets 5,00,000. Each owns 50%."
+   ],
+   "table": [
+    [
+     "Owner",
+     "Shares",
+     "Ownership"
+    ],
+    [
+     "Riya",
+     "5,00,000",
+     "50%"
+    ],
+    [
+     "Arjun",
+     "5,00,000",
+     "50%"
+    ],
+    [
+     "Total",
+     "10,00,000",
+     "100%"
+    ]
+   ],
+   "investors": "Investors always ask 'what % will I own?' and 'how many shares exist in total, counting promises like employee stock options?' The second question catches many founders out.",
+   "q": "If ChaiCart had issued 100 shares instead of 10 lakh, would anything important change?",
+   "a": "No. Riya and Arjun would still own 50% each. Only the percentage matters; the share count just sets the price per share."
+  },
+  {
+   "day": 3,
+   "week": 1,
+   "title": "Valuation: what is a company worth before it earns anything?",
+   "idea": "A startup's valuation isn't calculated from profits. It's a price the founders and an investor agree on.",
+   "explain": [
+    "For a mature company, value comes from its profits: an investor might pay 20 times what it earns a year.",
+    "A young startup has no profits, so its valuation is mostly a negotiation. The inputs are: how strong the team is, how big the opportunity is, early signs that customers love it, and how many other investors want in.",
+    "Think of it like an auction for a painting by an unknown artist. There's no 'correct' price; it's what someone is willing to pay, shaped by how many buyers turn up.",
+    "In practice, investors work backwards: 'I want about 10–20% of this company for my cheque. If my cheque is ₹50 lakh, the company must be worth roughly ₹2.5–5 crore.'"
+   ],
+   "ex_title": "ChaiCart's first price tag",
+   "ex": [
+    "An angel investor, Mr Mehta, likes ChaiCart. He wants to invest ₹50 lakh and own 10%.",
+    "If ₹50 lakh buys 10%, the whole company (after his money comes in) must be worth ₹50 lakh ÷ 10% = ₹5 crore.",
+    "Nobody 'calculated' ₹5 crore from profits. It came from how much he wanted to put in and how much he wanted to own."
+   ],
+   "table": null,
+   "investors": "Investors care less about today's valuation than about whether the company can be worth 10–100 times more later. A slightly high price on a winner is fine; a cheap price on a loser is worthless.",
+   "q": "Mehta invests ₹1 crore for 20%. What is the company worth after his investment?",
+   "a": "₹1 crore ÷ 20% = ₹5 crore. Same value, bigger cheque, bigger slice."
+  },
+  {
+   "day": 4,
+   "week": 1,
+   "title": "Pre-money and post-money: the most important formula",
+   "idea": "Pre-money is the value before the new cash comes in. Post-money is pre-money plus the cash.",
+   "explain": [
+    "When someone invests, the company's value jumps by exactly the cash they put in, because that cash now sits in the company's bank account.",
+    "Pre-money valuation = what the company is worth just before the investment.",
+    "Post-money valuation = pre-money + new investment.",
+    "Investor's ownership = investment ÷ post-money. Always divide by post-money, because the investor owns a slice of the company including their own cash.",
+    "Mixing up pre and post is the most common beginner mistake, and it changes who owns what."
+   ],
+   "ex_title": "ChaiCart's angel round, done properly",
+   "ex": [
+    "Mehta and the founders agree on a pre-money of ₹4.5 crore.",
+    "Mehta invests ₹50 lakh. Post-money = ₹4.5 crore + ₹0.5 crore = ₹5 crore.",
+    "Mehta owns ₹0.5 crore ÷ ₹5 crore = 10%.",
+    "Price per share = pre-money ÷ existing shares = ₹4.5 crore ÷ 10,00,000 = ₹45 per share.",
+    "So Mehta gets ₹50,00,000 ÷ ₹45 = 1,11,111 new shares. Total shares are now 11,11,111."
+   ],
+   "table": [
+    [
+     "",
+     "Amount"
+    ],
+    [
+     "Pre-money",
+     "₹4.5 crore"
+    ],
+    [
+     "+ New cash",
+     "₹0.5 crore"
+    ],
+    [
+     "= Post-money",
+     "₹5 crore"
+    ],
+    [
+     "Mehta owns",
+     "0.5 ÷ 5 = 10%"
+    ]
+   ],
+   "investors": "Investors always confirm in writing whether a number is pre or post. '₹5 crore valuation' can mean Mehta owns 10% (if post) or about 9.1% (if pre: 0.5 ÷ 5.5).",
+   "q": "A startup raises ₹2 crore at a ₹8 crore pre-money. What's the post-money, and what % does the investor own?",
+   "a": "Post-money = 8 + 2 = ₹10 crore. Investor owns 2 ÷ 10 = 20%."
+  },
+  {
+   "day": 5,
+   "week": 1,
+   "title": "Dilution: a smaller slice of a bigger pie",
+   "idea": "Every new round shrinks the founders' percentage, but if the price went up, their slice is worth more.",
+   "explain": [
+    "When new shares are created for an investor, everyone else's percentage goes down. This is called dilution.",
+    "Dilution isn't a loss by itself. Owning 50% of a ₹1 crore company (₹50 lakh) is worse than owning 30% of a ₹100 crore company (₹30 crore).",
+    "Quick rule: after a round where the new investor gets X%, every existing owner keeps (100% − X%) of what they had. If the investor gets 20%, everyone keeps 80% of their old percentage.",
+    "Dilution becomes a real problem only when it's too much too early, or when a round happens at a lower price than before (a 'down round', Week 6)."
+   ],
+   "ex_title": "What Mehta's 10% did to the founders",
+   "ex": [
+    "Before: Riya 50%, Arjun 50%.",
+    "Mehta gets 10%, so the founders keep 90% of their old stake: 50% × 0.9 = 45% each.",
+    "But each founder's stake is now worth 45% × ₹5 crore = ₹2.25 crore on paper, with real cash in the bank to grow."
+   ],
+   "table": [
+    [
+     "Owner",
+     "Before",
+     "After angel"
+    ],
+    [
+     "Riya",
+     "50%",
+     "45%"
+    ],
+    [
+     "Arjun",
+     "50%",
+     "45%"
+    ],
+    [
+     "Mehta (angel)",
+     "–",
+     "10%"
+    ]
+   ],
+   "investors": "Investors want founders to keep a meaningful stake (often over 50% combined after the Series A) so they stay motivated for the next 8–10 years.",
+   "q": "A founder owns 40% and the next investor takes 25%. What does the founder own afterwards?",
+   "a": "40% × (100% − 25%) = 40% × 0.75 = 30%."
+  },
+  {
+   "day": 6,
+   "week": 2,
+   "title": "Bootstrapping, and friends and family money",
+   "idea": "The very first money usually comes from the founders' own savings, or people who know them.",
+   "explain": [
+    "Bootstrapping means building with your own money and the company's own revenue, with no outside investors. You keep 100%, but growth is limited by what you can afford.",
+    "Friends and family rounds are small cheques from people who trust the founder more than the idea. They often don't negotiate hard on price.",
+    "The risk: these investors may not understand that most startups fail. Good founders explain clearly that this money could be lost completely.",
+    "Many great companies, like Zerodha in India, grew largely bootstrapped. Raising VC money isn't compulsory; it's a choice to grow faster in exchange for ownership."
+   ],
+   "ex_title": "ChaiCart before Mehta",
+   "ex": [
+    "Riya and Arjun put in ₹5 lakh each of savings to build a basic app and test in 3 offices near their home.",
+    "Those 3 offices order every day, which is the proof that convinced Mehta later.",
+    "They chose not to take money from relatives, to avoid awkward Diwali dinners if it failed."
+   ],
+   "table": null,
+   "investors": "Investors like founders who've put in their own money and got early proof cheaply. It shows commitment and resourcefulness.",
+   "q": "What do founders give up by bootstrapping, and what do they keep?",
+   "a": "They give up speed (less money to hire and market). They keep full ownership and control."
+  },
+  {
+   "day": 7,
+   "week": 2,
+   "title": "Angel investors",
+   "idea": "Angels are wealthy individuals who invest their own money in very early startups, often before there's a real product.",
+   "explain": [
+    "An angel is usually a successful founder, executive or professional investing personal money, typically lakhs to a couple of crores per startup.",
+    "Angels bet on people. At this stage there's little data, so they ask: do I trust these founders to figure things out?",
+    "Good angels bring more than money: advice, introductions to customers and to VCs for the next round.",
+    "In India, angels often invest through angel networks or platforms, where many people pool small cheques into one deal and share the research."
+   ],
+   "ex_title": "Why Mehta invested",
+   "ex": [
+    "Mehta used to run a large office-catering business. He knows offices hate their tea vending machines.",
+    "He saw that 3 offices ordered daily for 2 months without any discount. That's real demand.",
+    "He invested ₹50 lakh for 10% (at ₹5 crore post-money) and introduced ChaiCart to 15 more offices from his old network."
+   ],
+   "table": null,
+   "investors": "Angels look at the founders, the founders' insight into the problem, and any early sign that customers truly want it.",
+   "q": "Why might an angel invest in a startup with no revenue?",
+   "a": "Because they're betting on the founders and an early sign of demand, and the price is low enough that a big success would return many times their money."
+  },
+  {
+   "day": 8,
+   "week": 2,
+   "title": "The seed round",
+   "idea": "Seed money turns a promising pilot into a real business that can show steady growth.",
+   "explain": [
+    "After angels, the next step is usually a seed round: a few crore rupees from seed-focused VC funds, accelerators and angels.",
+    "Accelerators (like Y Combinator in the US) give a small amount of money, a few months of coaching and a 'demo day' in exchange for a few percent of the company.",
+    "The goal of seed money: find a product that customers keep using and paying for, and prove you can get more customers in a repeatable way. People call this 'product-market fit'.",
+    "Seed rounds usually sell 15–25% of the company."
+   ],
+   "ex_title": "ChaiCart's seed round",
+   "ex": [
+    "ChaiCart now serves 80 offices. Seedling Ventures (made up) offers ₹3 crore at a ₹12 crore pre-money.",
+    "Post-money = 12 + 3 = ₹15 crore. Seedling owns 3 ÷ 15 = 20%.",
+    "Everyone else keeps 80% of their old stake: founders 45% → 36% each; Mehta 10% → 8%.",
+    "Mehta's 8% is now worth 8% × ₹15 crore = ₹1.2 crore on paper. His ₹50 lakh has grown 2.4x in value."
+   ],
+   "table": [
+    [
+     "Owner",
+     "After angel",
+     "After seed"
+    ],
+    [
+     "Riya",
+     "45%",
+     "36%"
+    ],
+    [
+     "Arjun",
+     "45%",
+     "36%"
+    ],
+    [
+     "Mehta",
+     "10%",
+     "8%"
+    ],
+    [
+     "Seedling Ventures",
+     "–",
+     "20%"
+    ]
+   ],
+   "investors": "Seed investors look for early signs of product-market fit: are customers coming back on their own, and is usage growing week after week?",
+   "q": "Why did Mehta's percentage fall but his paper value rise?",
+   "a": "He was diluted from 10% to 8%, but the company's value tripled from ₹5 crore to ₹15 crore, so 8% of ₹15 crore beats 10% of ₹5 crore."
+  },
+  {
+   "day": 9,
+   "week": 2,
+   "title": "Series A, B, C: climbing the ladder",
+   "idea": "Each lettered round is bigger, happens at a higher valuation, and expects more proof.",
+   "explain": [
+    "Series A: the company has product-market fit and needs money to build a proper team and scale what works. Investors want clear numbers: revenue growth, retention, a sense of profit per customer.",
+    "Series B: the machine works; now grow fast into new cities or products.",
+    "Series C and beyond: dominate the market, expand abroad, buy smaller companies, prepare for an IPO (listing on the stock exchange).",
+    "Each round typically sells 10–25% of the company. Founders get diluted each time, but by much less if the valuation rises a lot."
+   ],
+   "ex_title": "ChaiCart's Series A",
+   "ex": [
+    "ChaiCart is in 600 offices across Mumbai and Pune. Growth Capital (made up) invests ₹20 crore at an ₹80 crore pre-money.",
+    "Post-money = ₹100 crore. Growth Capital owns 20 ÷ 100 = 20%.",
+    "Everyone keeps 80% of their stake again."
+   ],
+   "table": [
+    [
+     "Owner",
+     "After seed",
+     "After Series A"
+    ],
+    [
+     "Riya",
+     "36%",
+     "28.8%"
+    ],
+    [
+     "Arjun",
+     "36%",
+     "28.8%"
+    ],
+    [
+     "Mehta",
+     "8%",
+     "6.4%"
+    ],
+    [
+     "Seedling",
+     "20%",
+     "16%"
+    ],
+    [
+     "Growth Capital",
+     "–",
+     "20%"
+    ]
+   ],
+   "investors": "At Series A, gut feel gives way to data. Investors check whether growth comes from customers who stay, and whether each new customer is profitable over time (Week 4).",
+   "q": "Riya's stake fell from 50% to 28.8%. What's it worth now on paper?",
+   "a": "28.8% × ₹100 crore = ₹28.8 crore, compared with nothing when she owned 100% of an idea."
+  },
+  {
+   "day": 10,
+   "week": 2,
+   "title": "What a VC actually is",
+   "idea": "A VC firm invests other people's money in startups, in exchange for fees and a share of the profits.",
+   "explain": [
+    "Angels invest their own money. VC firms mostly invest money from others: pension funds, insurance companies, university endowments, family offices and rich individuals.",
+    "Those outside investors are called LPs (limited partners). They give money but don't pick the startups.",
+    "The VC partners who pick startups and manage the money are called GPs (general partners).",
+    "So a VC has two sets of customers: founders, whom they must win deals from, and LPs, whom they must return money to. Everything a VC does makes sense once you remember they answer to their LPs."
+   ],
+   "ex_title": "Who is behind Growth Capital",
+   "ex": [
+    "Growth Capital runs a ₹500 crore fund.",
+    "₹480 crore came from LPs: an insurance company, two family offices and a university endowment.",
+    "₹10 crore came from the GPs themselves (GPs usually invest about 1–2% of the fund, so they have their own money at risk), plus ₹10 crore from a few successful founders.",
+    "When Growth Capital invested ₹20 crore in ChaiCart, that was really LP money, managed by the GPs."
+   ],
+   "table": null,
+   "investors": "Remember the VC's own boss: LPs judge VCs on returns over about 10 years. That's why VCs push for big outcomes, not modest, safe ones.",
+   "q": "Who are LPs and GPs in one line each?",
+   "a": "LPs provide most of the money and stay passive. GPs run the fund, choose startups and get paid fees plus a share of profits."
+  },
+  {
+   "day": 11,
+   "week": 3,
+   "title": "How a VC fund is built",
+   "idea": "A fund is a pot of money with a fixed life, usually about 10 years.",
+   "explain": [
+    "A VC firm raises a fund, say ₹400 crore, from LPs. The fund has a lifespan of about 10 years, sometimes extended by 1–2 years.",
+    "Years 1–4ish: the investment period, when the fund makes new investments.",
+    "Years 4–10ish: the fund supports its best companies with more money and waits for exits (sales or IPOs) to return cash to LPs.",
+    "LPs don't hand over all the money on day one. The fund 'calls' it in pieces when it needs to invest (a capital call).",
+    "When one fund is mostly invested, the firm raises the next one. That's why firms have Fund I, Fund II and so on."
+   ],
+   "ex_title": "Monsoon Ventures Fund I (made up, our fund for this week)",
+   "ex": [
+    "Size: ₹400 crore, from 30 LPs.",
+    "Plan: back about 20 seed-stage startups over 4 years.",
+    "Keep roughly half the money in reserve to put more into the winners in later rounds.",
+    "Return cash to LPs as companies get acquired or go public, mostly in years 6–12."
+   ],
+   "table": null,
+   "investors": "Because a fund has a deadline, VCs need companies that can exit within about 7–10 years. A great business that will never be sold or listed doesn't fit a VC fund.",
+   "q": "Why don't VCs invest in a profitable family business that will never be sold?",
+   "a": "Because the fund must return cash to its LPs within about 10 years, and the fund only gets cash back when its stake is sold."
+  },
+  {
+   "day": 12,
+   "week": 3,
+   "title": "2 and 20: how VCs get paid",
+   "idea": "VCs charge about 2% a year to run the fund, and keep about 20% of the profits.",
+   "explain": [
+    "Management fee: about 2% of the fund each year, used for salaries, offices and research. Over 10 years that adds up to a big chunk, which is why fees usually drop after the investment period.",
+    "Carried interest ('carry'): the GPs keep about 20% of the profits, but only after LPs get back all the money they put in. Many funds, including many in India, also promise LPs a minimum return (a 'hurdle', often around 8% a year) before carry kicks in.",
+    "So GPs get rich only if LPs do well first. This aligns everyone, in theory."
+   ],
+   "ex_title": "Monsoon Ventures, 10 years later",
+   "ex": [
+    "Fund size: ₹400 crore. Fees over the life: roughly ₹60–80 crore (say ₹70 crore), so about ₹330 crore actually gets invested.",
+    "Suppose the investments return ₹1,200 crore in total.",
+    "Profit = ₹1,200 crore − ₹400 crore returned to LPs first = ₹800 crore.",
+    "Carry to GPs = 20% × ₹800 crore = ₹160 crore. LPs get ₹400 + ₹640 = ₹1,040 crore.",
+    "LPs turned ₹400 crore into ₹1,040 crore: 2.6x their money, after all fees and carry."
+   ],
+   "table": null,
+   "investors": "LPs compare the fund's returns after fees and carry with simply buying a stock index. A VC fund needs to beat that clearly to be worth the risk and the 10-year lock-in.",
+   "q": "If Monsoon returned exactly ₹400 crore in total, how much carry would the GPs get?",
+   "a": "Zero. LPs must get their ₹400 crore back first, and there's no profit left to share. The GPs would only have earned the management fees."
+  },
+  {
+   "day": 13,
+   "week": 3,
+   "title": "The power law: one winner pays for everything",
+   "idea": "In venture, a tiny number of companies make almost all the returns.",
+   "explain": [
+    "In most of life, results cluster around the average. In venture, results follow a 'power law': most investments return little or nothing, and one or two return enormous amounts.",
+    "This changes how VCs think. Missing the one big winner is far worse than backing ten failures.",
+    "So a VC's key question about every startup is: 'If everything goes right, could this be big enough to return my whole fund?'",
+    "That's why VCs can seem to ignore nice, safe businesses: a company that can at most triple won't move a fund."
+   ],
+   "ex_title": "Monsoon's 20 seed investments of ₹10 crore each (₹200 crore)",
+   "ex": [
+    "12 companies fail: ₹0 back.",
+    "5 limp along and are sold for about what was invested: ₹50 crore back.",
+    "2 do well and return 5x: ₹100 crore back.",
+    "1 becomes huge and returns 50x: ₹500 crore back.",
+    "Total: ₹650 crore from ₹200 crore, or 3.25x. Remove that one winner and it's ₹150 crore, a loss."
+   ],
+   "table": [
+    [
+     "Outcome",
+     "Companies",
+     "Money back"
+    ],
+    [
+     "Fail",
+     "12",
+     "₹0"
+    ],
+    [
+     "Return 1x",
+     "5",
+     "₹50 cr"
+    ],
+    [
+     "Return 5x",
+     "2",
+     "₹100 cr"
+    ],
+    [
+     "Return 50x",
+     "1",
+     "₹500 cr"
+    ],
+    [
+     "Total",
+     "20",
+     "₹650 cr (3.25x)"
+    ]
+   ],
+   "investors": "Investors size up the 'best case' first. A pitch that only shows a safe, modest outcome loses VCs, even if it's very likely to succeed.",
+   "q": "Without its single best company, did Monsoon make or lose money?",
+   "a": "Lose: ₹150 crore back on ₹200 crore invested. One winner turned a loss into a 3.25x result."
+  },
+  {
+   "day": 14,
+   "week": 3,
+   "title": "Measuring a fund: TVPI, DPI and IRR",
+   "idea": "Paper gains and cash in hand are different things, and timing matters.",
+   "explain": [
+    "TVPI (total value to paid-in): everything the fund is worth today, including shares not yet sold, divided by what LPs paid in. It includes paper gains.",
+    "DPI (distributions to paid-in): actual cash returned to LPs divided by what they paid in. LPs love DPI because it's real money, not estimates.",
+    "IRR (internal rate of return): the yearly growth rate of the money. Getting 3x in 5 years is much better than 3x in 12 years.",
+    "Early in a fund's life, TVPI can look great while DPI is close to zero. Over time the gap should close as companies are sold."
+   ],
+   "ex_title": "One investment, 5 years on",
+   "ex": [
+    "Monsoon invested ₹10 crore in a startup.",
+    "After 5 years it sold some shares for ₹5 crore of cash and still holds shares valued at ₹25 crore.",
+    "DPI = ₹5 crore ÷ ₹10 crore = 0.5x (half the money is back as cash).",
+    "TVPI = (₹5 crore + ₹25 crore) ÷ ₹10 crore = 3x.",
+    "IRR: tripling in 5 years is about 25% a year, if the paper value turns into cash."
+   ],
+   "table": null,
+   "investors": "LPs ask 'what's your DPI?' because paper values can be optimistic. A fund with high TVPI but no DPI after 8 years worries them.",
+   "q": "Why might an LP prefer a fund with 2x DPI over one with 4x TVPI and 0.2x DPI?",
+   "a": "Because 2x DPI is real cash already returned, while 4x TVPI is mostly valuations that may never turn into cash."
+  },
+  {
+   "day": 15,
+   "week": 3,
+   "title": "Building a portfolio: how many bets, and how much in reserve",
+   "idea": "VCs plan how many startups to back and save money to double down on the winners.",
+   "explain": [
+    "A fund decides upfront roughly how many companies to back (often 20–40), how big each first cheque is, and what ownership it targets (often 10–20% at entry).",
+    "It also keeps 'reserves', often 40–60% of the fund, to invest again in later rounds of the companies that are working. This is called follow-on investing.",
+    "Pro-rata rights let an investor buy enough new shares in later rounds to keep its percentage. Using them on winners is how funds keep meaningful ownership.",
+    "The hard skill is deciding where to put reserves: back the winners, not rescue the strugglers."
+   ],
+   "ex_title": "Seedling Ventures and ChaiCart",
+   "ex": [
+    "Seedling owned 20% after the seed round and would be diluted to 16% in the Series A.",
+    "Its pro-rata right let it buy 20% of the new Series A shares: about ₹4 crore (20% of the ₹20 crore round), which would have kept it at 20%.",
+    "In our story, Seedling chose to save its reserves for later, so it was diluted to 16%. The next round would show whether that was wise."
+   ],
+   "table": null,
+   "investors": "Founders should know which of their investors have reserves and pro-rata rights. An existing investor who doesn't follow on sends a negative signal to new investors.",
+   "q": "Why do funds keep so much money in reserve instead of backing more new companies?",
+   "a": "Because of the power law: putting more money into the few winners earns far more than spreading it across extra early bets."
+  },
+  {
+   "day": 16,
+   "week": 4,
+   "title": "The team: why VCs bet on people first",
+   "idea": "Early on, the founders are the main evidence a VC has.",
+   "explain": [
+    "At seed stage there's little data, and the idea will probably change. Investors back people who can learn fast and adapt.",
+    "They look for 'founder-market fit': why are these people unusually well placed to win this specific market?",
+    "They also check: Can the founders sell the idea to customers, employees and investors? Do the co-founders complement each other? How did they handle past setbacks?",
+    "Red flags: one founder holding all the power with no balance, co-founders who disagree on the vision, or founders not working on it full time."
+   ],
+   "ex_title": "How Growth Capital judged Riya and Arjun",
+   "ex": [
+    "Riya: ex-operations manager at a food delivery company, so she knows 10-minute logistics.",
+    "Arjun: ex-sales lead selling software to office managers, so he knows how offices buy.",
+    "Their past metrics: hit monthly targets 14 months in a row, and survived a supplier collapse in month 6 without losing customers.",
+    "Verdict: strong founder-market fit."
+   ],
+   "table": null,
+   "investors": "VCs ask: why you, why now, and how fast do you learn? They'll call former colleagues, customers and even ex-employees to check.",
+   "q": "What is 'founder-market fit' in one line?",
+   "a": "The founders have unusual experience or insight that makes them especially likely to win in this particular market."
+  },
+  {
+   "day": 17,
+   "week": 4,
+   "title": "Market size: TAM, SAM, SOM",
+   "idea": "VCs need the market to be big enough that a winner can be huge.",
+   "explain": [
+    "TAM (total addressable market): all the money spent on this problem everywhere you could ever sell.",
+    "SAM (serviceable available market): the part you can actually reach with your product and model.",
+    "SOM (serviceable obtainable market): the part you can realistically win in the next few years.",
+    "Investors distrust 'TAM is $100 billion' slides. They prefer a bottom-up count: number of customers × what each would pay."
+   ],
+   "ex_title": "ChaiCart's market, counted bottom-up (illustrative numbers)",
+   "ex": [
+    "SAM: about 60,000 mid and large offices in India's 8 biggest cities.",
+    "Each spends about ₹1.8 lakh a year on tea and snacks.",
+    "SAM = 60,000 × ₹1.8 lakh = ₹1,080 crore a year.",
+    "SOM: winning 5% in 5 years = 3,000 offices = about ₹54 crore of revenue a year.",
+    "A VC would ask: can ChaiCart grow beyond office chai (into office lunches or vending) to make the TAM much bigger?"
+   ],
+   "table": null,
+   "investors": "Investors want a path to at least a few thousand crore in company value. If the market caps the company at ₹100 crore, it doesn't fit a VC fund's power-law maths.",
+   "q": "Why do VCs prefer bottom-up market sizing?",
+   "a": "Because it's built from real numbers (customers × price) you can check, instead of a big top-down figure that sounds impressive but proves nothing."
+  },
+  {
+   "day": 18,
+   "week": 4,
+   "title": "Traction: growth and retention",
+   "idea": "Growth shows people want it now. Retention shows they keep wanting it.",
+   "explain": [
+    "Traction means proof that customers want the product: users, orders, revenue.",
+    "Growth rate matters more than size early on. 15% growth a month compounds to about 5x in a year.",
+    "Retention is the share of customers who keep using you over time. High growth with poor retention is a leaky bucket: you keep pouring in customers who leave.",
+    "Investors look at cohorts: group customers by the month they joined and track what share are still active 1, 3 and 6 months later. A good curve flattens out instead of falling to zero."
+   ],
+   "ex_title": "ChaiCart's January cohort",
+   "ex": [
+    "100 offices joined in January.",
+    "Still ordering after 1 month: 90. After 3 months: 82. After 6 months: 78.",
+    "The curve flattens at about 78%. Once an office settles in, it stays. That's a strong sign of product-market fit.",
+    "Monthly revenue growth over the last 6 months averaged 15%."
+   ],
+   "table": [
+    [
+     "Months after joining",
+     "Offices still ordering"
+    ],
+    [
+     "0",
+     "100"
+    ],
+    [
+     "1",
+     "90"
+    ],
+    [
+     "3",
+     "82"
+    ],
+    [
+     "6",
+     "78"
+    ]
+   ],
+   "investors": "Investors often care more about retention than growth, because good retention makes all future growth worth more.",
+   "q": "Two startups both grow 20% a month. One keeps 80% of customers after 6 months, the other 20%. Which do you fund?",
+   "a": "The one with 80% retention. The other is buying growth that leaks away."
+  },
+  {
+   "day": 19,
+   "week": 4,
+   "title": "Unit economics, burn and runway",
+   "idea": "Does each customer make money over time, and how long until the cash runs out?",
+   "explain": [
+    "CAC (customer acquisition cost): what you spend in sales and marketing to win one customer.",
+    "LTV (lifetime value): the gross profit a customer brings over their whole time with you.",
+    "A common rule of thumb: LTV should be at least 3x CAC, and you should earn back the CAC within about 12 months (the payback period).",
+    "Burn rate: how much cash the company loses each month. Runway: how many months until the bank balance hits zero (cash ÷ monthly burn)."
+   ],
+   "ex_title": "ChaiCart's numbers",
+   "ex": [
+    "Each office orders ₹3,000 a month. After ingredients and delivery, ChaiCart keeps 30%: ₹900 a month of gross profit.",
+    "Offices stay about 18 months on average. LTV = ₹900 × 18 = ₹16,200.",
+    "Winning an office costs ₹5,400 in sales effort and free trial days. CAC = ₹5,400.",
+    "LTV ÷ CAC = 3x. Payback = ₹5,400 ÷ ₹900 = 6 months. Healthy.",
+    "Burn: spends ₹60 lakh a month and earns ₹20 lakh of gross profit, so net burn is ₹40 lakh. With ₹4 crore in the bank, runway = 10 months."
+   ],
+   "table": null,
+   "investors": "Investors want 18–24 months of runway after a round, because raising the next round takes 6 months and can go wrong. With 10 months left, ChaiCart should start fundraising now.",
+   "q": "If ChaiCart's CAC doubled to ₹10,800, what happens to LTV ÷ CAC and payback?",
+   "a": "LTV ÷ CAC drops to 1.5x and payback stretches to 12 months. Growth would now cost much more, and investors would worry."
+  },
+  {
+   "day": 20,
+   "week": 4,
+   "title": "The pitch and due diligence",
+   "idea": "The pitch gets a meeting; due diligence decides the deal.",
+   "explain": [
+    "A pitch deck tells a simple story in about 10–15 slides: the problem, the solution, why now, the market, traction, the business model, the competition, the team, and how much money you want and what for.",
+    "If the VC is interested, partners meet the founders, then the firm's partners decide together in a partner meeting.",
+    "Due diligence is the checking phase: customer calls, financial checks, legal checks (who owns the code and the brand), and background checks on founders.",
+    "The process from first meeting to money in the bank often takes 1–3 months. It's slower when the market is cautious."
+   ],
+   "ex_title": "ChaiCart's Series A in practice",
+   "ex": [
+    "Week 1: Arjun pitched 12 VC firms; 5 asked for second meetings.",
+    "Week 3: Growth Capital's partner spent a day riding with delivery staff and calling 15 office managers.",
+    "Week 5: partner meeting said yes, and Growth Capital sent a term sheet (next week's topic).",
+    "Weeks 6–10: legal and financial checks, then the money arrived."
+   ],
+   "table": null,
+   "investors": "VCs look for consistency: do the deck, the numbers in the books and what customers say all match? One mismatch can kill trust.",
+   "q": "What's the difference between a pitch and due diligence?",
+   "a": "The pitch is the founders' story to win interest. Due diligence is the investor checking that the story is true."
+  },
+  {
+   "day": 21,
+   "week": 5,
+   "title": "The cap table: the company's ownership register",
+   "idea": "A cap table lists every owner, how many shares they hold and their percentage, round by round.",
+   "explain": [
+    "Cap table is short for capitalisation table. It's a spreadsheet of who owns what.",
+    "It includes founders, investors, and the employee stock option pool (shares set aside for employees, next lesson).",
+    "'Fully diluted' means counting everything that could become a share, such as options and convertible notes, not just shares already issued. Investors always use fully diluted numbers.",
+    "A messy cap table, with too many tiny investors, unclear promises or a founder who left holding a big stake, can scare off future investors."
+   ],
+   "ex_title": "ChaiCart's full journey so far",
+   "ex": [
+    "Each round, new shares are created, and everyone before is diluted by the new investor's percentage.",
+    "Total money raised: ₹50 lakh + ₹3 crore + ₹20 crore = ₹23.5 crore.",
+    "The founders still own 57.6% together of a company valued at ₹100 crore."
+   ],
+   "table": [
+    [
+     "Owner",
+     "Start",
+     "Angel",
+     "Seed",
+     "Series A"
+    ],
+    [
+     "Riya",
+     "50%",
+     "45%",
+     "36%",
+     "28.8%"
+    ],
+    [
+     "Arjun",
+     "50%",
+     "45%",
+     "36%",
+     "28.8%"
+    ],
+    [
+     "Mehta",
+     "–",
+     "10%",
+     "8%",
+     "6.4%"
+    ],
+    [
+     "Seedling",
+     "–",
+     "–",
+     "20%",
+     "16%"
+    ],
+    [
+     "Growth Capital",
+     "–",
+     "–",
+     "–",
+     "20%"
+    ],
+    [
+     "Post-money",
+     "–",
+     "₹5 cr",
+     "₹15 cr",
+     "₹100 cr"
+    ]
+   ],
+   "investors": "Before investing, VCs check the cap table to see whether founders still own enough to stay motivated and whether there's any surprise owner or promise.",
+   "q": "Why do investors care about 'fully diluted' ownership?",
+   "a": "Because options and convertible notes will become shares later and dilute everyone. Ignoring them overstates what each person really owns."
+  },
+  {
+   "day": 22,
+   "week": 5,
+   "title": "ESOPs and the option pool trick",
+   "idea": "Startups reserve shares for employees, and who pays for that reserve matters a lot.",
+   "explain": [
+    "Startups can't pay big salaries, so they offer ESOPs (employee stock options): the right to buy shares later at a fixed low price.",
+    "Options usually vest over 4 years with a 1-year cliff: leave before 1 year and you get nothing; after that you earn your options gradually.",
+    "Investors usually ask the company to create or top up an option pool (often 10–15%) as part of a funding round.",
+    "The trick: if the pool is counted inside the pre-money, existing owners (mainly founders) absorb all its dilution, and the new investor isn't diluted by it at all. It quietly lowers the real price the investor pays."
+   ],
+   "ex_title": "What if Growth Capital had demanded a 10% pool?",
+   "ex": [
+    "Headline terms unchanged: ₹20 crore at ₹80 crore pre-money, ₹100 crore post-money.",
+    "But a new 10% pool must exist after the round, created before the money comes in.",
+    "Post-round: Growth Capital 20%, pool 10%, existing owners only 70% instead of 80%.",
+    "Each founder ends with 36% × 70% = 25.2% instead of 28.8%.",
+    "The existing owners' shares are effectively valued at ₹70 crore, not ₹80 crore. The 'effective pre-money' is lower than the headline."
+   ],
+   "table": [
+    [
+     "",
+     "No pool",
+     "10% pool inside pre-money"
+    ],
+    [
+     "Growth Capital",
+     "20%",
+     "20%"
+    ],
+    [
+     "Option pool",
+     "–",
+     "10%"
+    ],
+    [
+     "Each founder",
+     "28.8%",
+     "25.2%"
+    ],
+    [
+     "Effective pre-money",
+     "₹80 cr",
+     "₹70 cr"
+    ]
+   ],
+   "investors": "Founders should negotiate the pool size using a real hiring plan ('we need ₹X of options for these 12 hires'), not accept a large default.",
+   "q": "Why does the option pool's placement (pre- vs post-money) matter to founders?",
+   "a": "If it's in the pre-money, founders alone pay for the employees' slice, which lowers the real value of their shares."
+  },
+  {
+   "day": 23,
+   "week": 5,
+   "title": "SAFEs and convertible notes: investing without setting a price",
+   "idea": "Early investors can put in money now and decide the share price later, at the next priced round.",
+   "explain": [
+    "Agreeing a valuation for a tiny startup is hard and legally expensive. So early money often comes in as a promise to convert into shares later.",
+    "A convertible note is technically a loan that converts into shares at the next priced round. A SAFE (simple agreement for future equity, created by Y Combinator) is similar but isn't a loan: no interest, no repayment date.",
+    "To reward the early risk, these usually have a valuation cap (the maximum valuation at which the money converts) and/or a discount (for example, 20% off the next round's price). The investor gets whichever is better for them.",
+    "In India, the US-style SAFE doesn't fit local rules well, so Indian startups usually use instruments like CCPS (compulsorily convertible preference shares) or CCDs (compulsorily convertible debentures). Some platforms offer India-specific 'iSAFE' notes built on these."
+   ],
+   "ex_title": "If Mehta had used a SAFE instead",
+   "ex": [
+    "Mehta puts in ₹50 lakh on a SAFE with a ₹4 crore cap and a 20% discount.",
+    "Later, Seedling prices the seed round at ₹12 crore pre-money.",
+    "Discount option: Mehta pays 80% of Seedling's price, as if the company were worth ₹9.6 crore.",
+    "Cap option: he converts as if the company were worth only ₹4 crore. Much better, so the cap applies.",
+    "He gets roughly 3 times as many shares per rupee as Seedling: about 12.5% before the seed dilution (₹50 lakh ÷ ₹4 crore), instead of the 10% he got in the priced angel round."
+   ],
+   "table": null,
+   "investors": "Founders should add up all their SAFEs and notes before the next round. Many small caps add up to a surprise amount of dilution on conversion day.",
+   "q": "A SAFE has a ₹10 crore cap and a 20% discount. The next round is priced at ₹8 crore. Which applies?",
+   "a": "The discount: 80% of ₹8 crore = ₹6.4 crore, which is lower (better for the investor) than the ₹10 crore cap."
+  },
+  {
+   "day": 24,
+   "week": 5,
+   "title": "Liquidation preference: who gets paid first",
+   "idea": "If the company is sold, investors with a preference get their money back before founders get anything.",
+   "explain": [
+    "Investors usually buy 'preference shares', not ordinary shares. One key right is the liquidation preference: in a sale (or shutdown), they get paid first.",
+    "The standard is '1x non-participating': the investor chooses either to get its money back (1x) OR to convert to ordinary shares and take its percentage of the sale. Whichever is more.",
+    "'Participating' preferences are much tougher: the investor takes its money back AND its percentage of what's left. Founders should push back on these.",
+    "Preferences matter most in modest exits. In a huge exit, everyone converts to ordinary shares and the preference doesn't matter."
+   ],
+   "ex_title": "ChaiCart is sold for only ₹60 crore after the Series A",
+   "ex": [
+    "Growth Capital (₹20 crore invested, 20% stake, 1x non-participating) chooses the better of ₹20 crore back or 20% × ₹60 crore = ₹12 crore. It takes ₹20 crore.",
+    "₹40 crore is left for the other 80% of owners.",
+    "Each founder (28.8% of the company) gets 28.8 ÷ 80 × ₹40 crore = ₹14.4 crore.",
+    "Without any preference, each founder would have got 28.8% × ₹60 crore = ₹17.28 crore."
+   ],
+   "table": [
+    [
+     "Who",
+     "With 1x preference",
+     "No preference"
+    ],
+    [
+     "Growth Capital",
+     "₹20 cr",
+     "₹12 cr"
+    ],
+    [
+     "Each founder",
+     "₹14.4 cr",
+     "₹17.28 cr"
+    ]
+   ],
+   "investors": "Investors use preferences to protect against overpaying. Founders should watch the multiple (1x vs 2x) and whether it's participating; those two details change the outcome most.",
+   "q": "If ChaiCart sold for ₹500 crore, would Growth Capital use its preference?",
+   "a": "No. 20% of ₹500 crore is ₹100 crore, far more than its ₹20 crore back, so it converts and shares like everyone else."
+  },
+  {
+   "day": 25,
+   "week": 5,
+   "title": "Control terms: board seats, vesting and anti-dilution",
+   "idea": "Beyond price, a term sheet decides who controls the company and what happens when things go wrong.",
+   "explain": [
+    "Board seats: the board makes the biggest decisions, like hiring or firing the CEO and approving fundraising. A Series A lead usually takes one seat; founders try to keep a majority early on.",
+    "Protective provisions (veto rights): investors can block certain actions, such as selling the company or issuing new shares, without their approval.",
+    "Founder vesting: investors may ask founders' own shares to 'vest' over time, so a co-founder who leaves early doesn't walk away with a huge stake.",
+    "Anti-dilution: if a future round happens at a lower price, protected investors get extra shares. 'Broad-based weighted average' is the normal, gentler version; 'full ratchet' is harsh and rare.",
+    "Pro-rata rights (Week 3) and information rights (regular financial reports) are also standard."
+   ],
+   "ex_title": "Growth Capital's term sheet (simplified)",
+   "ex": [
+    "₹20 crore at ₹80 crore pre-money, 1x non-participating liquidation preference.",
+    "Board: 2 founders + 1 Growth Capital partner + 1 independent person both sides agree on.",
+    "Veto on selling the company or raising new money below this price.",
+    "Founders re-vest 25% of their shares over 2 years.",
+    "Broad-based weighted average anti-dilution, plus pro-rata rights."
+   ],
+   "table": null,
+   "investors": "Experienced founders often say: 'A fair price with clean terms beats a high price with nasty terms.' Terms decide what you actually take home.",
+   "q": "Why might a founder accept a lower valuation to avoid a participating 2x preference?",
+   "a": "Because harsh preference terms can take far more money in a modest exit than a few crore of valuation difference ever gives back."
+  },
+  {
+   "day": 26,
+   "week": 6,
+   "title": "Exits: how everyone finally gets paid",
+   "idea": "Paper value turns into cash only through an exit: an acquisition, an IPO or a secondary sale.",
+   "explain": [
+    "Acquisition: a bigger company buys the startup. It's the most common exit.",
+    "IPO (initial public offering): the company lists on a stock exchange like NSE or BSE, and investors can sell shares in the market, usually after a lock-in period.",
+    "Secondary sale: an existing investor or founder sells shares to a new investor before any IPO. It's a way to give early people some cash along the way.",
+    "The 'waterfall' is the order in which sale money flows: debts first, then liquidation preferences, then everyone by percentage."
+   ],
+   "ex_title": "ChaiCart is acquired for ₹500 crore (no further rounds, to keep it simple)",
+   "ex": [
+    "At this price every investor converts, so preferences don't matter. Everyone gets their percentage.",
+    "Each founder: 28.8% → ₹144 crore. Mehta: 6.4% → ₹32 crore, 64x his ₹50 lakh.",
+    "Seedling: 16% → ₹80 crore, about 27x its ₹3 crore. Growth Capital: 20% → ₹100 crore, 5x its ₹20 crore.",
+    "Notice: the earliest, riskiest money earned the biggest multiple."
+   ],
+   "table": [
+    [
+     "Owner",
+     "Stake",
+     "Gets",
+     "Invested",
+     "Multiple"
+    ],
+    [
+     "Each founder",
+     "28.8%",
+     "₹144 cr",
+     "₹5 lakh",
+     "huge"
+    ],
+    [
+     "Mehta",
+     "6.4%",
+     "₹32 cr",
+     "₹50 lakh",
+     "64x"
+    ],
+    [
+     "Seedling",
+     "16%",
+     "₹80 cr",
+     "₹3 cr",
+     "~27x"
+    ],
+    [
+     "Growth Capital",
+     "20%",
+     "₹100 cr",
+     "₹20 cr",
+     "5x"
+    ]
+   ],
+   "investors": "Investors think about exits from day one: who could buy this company, and could it plausibly list on a stock exchange?",
+   "q": "Why did Mehta earn 64x while Growth Capital earned 5x on the same exit?",
+   "a": "Mehta invested at a ₹5 crore valuation, Growth Capital at ₹100 crore. Earlier money buys at a much lower price, which is the reward for taking more risk."
+  },
+  {
+   "day": 27,
+   "week": 6,
+   "title": "Down rounds and when things go wrong",
+   "idea": "Not every round goes up. A lower valuation than last time is a down round, and it's painful.",
+   "explain": [
+    "A down round means raising money at a lower price per share than the previous round. It happens when growth disappoints or markets turn cautious, as in 2022–23 when many startups' valuations fell.",
+    "It hurts in three ways: heavy dilution, anti-dilution clauses giving earlier investors extra shares (diluting founders and employees more), and low morale because employees' options may now be worth little.",
+    "Alternatives: cut costs to stretch runway, raise a smaller 'bridge' round from existing investors, sell the company, or in the worst case shut down.",
+    "Many great companies went through a down round and recovered. It's a setback, not automatically the end."
+   ],
+   "ex_title": "ChaiCart's bad year (alternative story)",
+   "ex": [
+    "A big food company launches free office chai and ChaiCart's growth stalls.",
+    "ChaiCart needs ₹15 crore. The best offer is at a ₹60 crore pre-money, below the ₹100 crore post-money of the Series A.",
+    "Growth Capital's anti-dilution clause gives it extra shares to make up part of the price drop, so the founders are diluted extra.",
+    "The founders cut costs, refocus on their most loyal 400 offices, and accept the round to survive."
+   ],
+   "table": null,
+   "investors": "Investors judge founders by how they handle bad news: early, honest updates with a plan earn trust for the next round.",
+   "q": "Why does a down round hurt employees, not just founders?",
+   "a": "Their stock options were priced at the old, higher value, so they may now be worth little or nothing, which can push good people to leave."
+  },
+  {
+   "day": 28,
+   "week": 6,
+   "title": "Venture capital in India",
+   "idea": "The same ideas apply in India, with some local rules and quirks.",
+   "explain": [
+    "Most Indian VC funds are registered with SEBI as Alternative Investment Funds (AIFs). Venture capital and angel funds fall under Category I.",
+    "Many big funds investing in India are set up abroad and invest through foreign investment routes, so they follow RBI's foreign exchange rules on pricing and instruments.",
+    "Instruments: Indian startups usually issue CCPS (preference shares that must convert to ordinary shares) to investors, rather than US-style preferred stock or SAFEs.",
+    "Angel tax: India used to tax startups when they raised money above a 'fair value'. It was a big pain for founders, and it was scrapped in the July 2024 Budget.",
+    "Exits: India's IPO market has become a real exit route for startups in recent years, alongside acquisitions."
+   ],
+   "ex_title": "If ChaiCart's investors were foreign",
+   "ex": [
+    "A US-based fund investing in ChaiCart would invest via the foreign direct investment route, with the price backed by a valuation report as Indian rules require.",
+    "It would receive CCPS that convert to ordinary shares later, carrying the preference rights you learned about.",
+    "Many Indian startups also 'flip' (move their parent company abroad) or 'reverse flip' (move back to India before an IPO). Several big names have moved back to list in India."
+   ],
+   "table": null,
+   "investors": "Global investors look at India for its huge digital public infrastructure (UPI, Aadhaar, Account Aggregator) and young consumers, but they watch exit routes and regulation closely.",
+   "q": "Why do Indian startups usually issue CCPS instead of SAFEs?",
+   "a": "Because Indian rules, especially for foreign investment, recognise convertible instruments like CCPS and CCDs, while the US-style SAFE doesn't fit those rules well."
+  },
+  {
+   "day": 29,
+   "week": 6,
+   "title": "Think like a VC: evaluate a deal end to end",
+   "idea": "Put it all together: team, market, traction, economics, price and terms.",
+   "explain": [
+    "Step 1: Could this return the fund? Estimate the best-case company value and what your stake would be worth.",
+    "Step 2: Why this team, why now?",
+    "Step 3: Evidence: growth, retention cohorts, unit economics.",
+    "Step 4: Price and terms: what you pay, what you own after future dilution, and your downside protection.",
+    "Step 5: The biggest risk, and what would have to be true for it to work."
+   ],
+   "ex_title": "Monsoon's Series B memo on ChaiCart (illustrative)",
+   "ex": [
+    "Ask: ₹60 crore at a ₹340 crore pre-money (₹400 crore post), so Monsoon would own 15%.",
+    "Best case: ChaiCart becomes the default office food platform, worth ₹5,000 crore in 7 years.",
+    "After about 30% more dilution in future rounds, 15% becomes about 10.5%, worth ₹525 crore: about 8.75x on ₹60 crore.",
+    "Monsoon's fund is ₹400 crore. A ₹525 crore outcome would return more than the whole fund, which passes the test.",
+    "Biggest risk: large food delivery apps launching the same service. What must be true: office contracts and 10-minute logistics are hard to copy."
+   ],
+   "table": null,
+   "investors": "Every VC memo answers: how big can it get, why will this team win, what's the evidence, what's the price, and what could kill it.",
+   "q": "Why does the memo reduce 15% to 10.5% before valuing the outcome?",
+   "a": "Because future rounds will dilute Monsoon too. VCs always estimate their ownership at exit, not just at entry."
+  },
+  {
+   "day": 30,
+   "week": 6,
+   "title": "Capstone: using VC thinking as a PM, and in interviews",
+   "idea": "VC thinking is a sharp lens for product strategy, fintech and AI-lab interviews.",
+   "explain": [
+    "As a PM, you can use the VC lens on any feature or product bet: how big could it get, what's the evidence, what does it cost to win each user (CAC), and what's each user worth over time (LTV)?",
+    "In fintech, you've seen these instruments up close: lending is debt, while startups raise equity. Knowing both helps you understand why a startup partner behaves the way it does.",
+    "AI labs and big tech raise and deploy enormous capital. Knowing how valuations, dilution and investor returns work helps you discuss strategy credibly.",
+    "Interview tip: when asked 'Should company X launch Y?', frame it like a VC memo: the size of the prize, why us, the evidence, the costs, the risks, and what would have to be true."
+   ],
+   "ex_title": "Your 6-week recap, in ChaiCart numbers",
+   "ex": [
+    "Raised ₹23.5 crore over 3 rounds: angel at ₹5 crore post, seed at ₹15 crore, Series A at ₹100 crore.",
+    "Founders went from 100% to 57.6% together, while their stake's value went from nothing to ₹57.6 crore on paper.",
+    "Funds win through the power law. Preferences and terms decide modest exits; percentages decide big ones.",
+    "Next step: take any startup in the news and ask: what round is this, what's the pre- and post-money, who's diluted, and what must be true for the investors to win?"
+   ],
+   "table": null,
+   "investors": "You now think like an investor: return the fund, back the team, trust retention, check the unit economics, read the terms, and plan for the exit.",
+   "q": "A news story says 'Startup Z raises ₹100 crore at a ₹900 crore valuation'. What two questions do you ask first?",
+   "a": "Is ₹900 crore pre- or post-money (so did the investors get 10% or about 11.1%)? And what terms came with it, especially liquidation preferences, since terms matter as much as price."
+  }
+ ]
+}
